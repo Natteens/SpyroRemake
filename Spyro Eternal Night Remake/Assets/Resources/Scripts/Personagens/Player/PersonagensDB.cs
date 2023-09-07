@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PersonagensDB 
+public class PersonagensDB : MonoBehaviour
 {
     [SerializeField] short vidaMax; // Vida maxima de um personagem
     [SerializeField] short velocidade; // velocidade maxima de um personagem
+    [SerializeField] short forcaPulo; // velocidade maxima de um personagem
     [SerializeField] short ataque; // dano de ataque de um personagem
 
     public short VidaMax
@@ -20,5 +21,9 @@ public class PersonagensDB
     public short Ataque
     {
         get { return ataque; }
+    }
+    public short ForcaPulo
+    {
+        get { return forcaPulo; }
     }
 }
