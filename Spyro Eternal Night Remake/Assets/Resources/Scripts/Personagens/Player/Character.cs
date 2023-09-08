@@ -5,38 +5,98 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.VFX;
 
 public class Character : MonoBehaviour
 {
+    #region InputActions
     private PlayerInputActions playerActionsAsset;
     private InputAction move;
-    private InputAction glide; // Ação para o glide
-    private InputAction slowTime; // Ação para o SlowTime
+    private InputAction glide;
+    private InputAction slowTime;
+    private InputAction attack;
+    private InputAction dash; // Nova InputAction para o dash
+    #endregion
 
-    [SerializeField] private float movementForce = 1f;
-    [SerializeField] private float jumpForce = 5f;
+    #region Configurações
+    // ------------------------------------------------------\\ 
+    [Header("Configurações do Jogador")]
+    [Space(10)]
+
+    [Header("Movimentação")]
+    [Space(5)]
+
+    [Range(0, 10)]
     [SerializeField] private float maxSpeed = 5f;
-    [SerializeField] private float glideForce = 1f;
-    [SerializeField] private float glideDrag = 2f;
+    [Range(0, 10)]
+    [SerializeField] private float movementForce = 1f;
+    [Range(0, 10)]
     [SerializeField] private float runSpeed = 10f;
+
+    // ------------------------------------------------------\\ 
+
+    [Header("Pulo")]
+    [Space(5)]
+
+    [Range(0, 10)]
     [SerializeField] private int maxJumps = 2;
+    [Range(0, 10)]
+    [SerializeField] private float jumpForce = 5f;
 
+    // ------------------------------------------------------\\ 
+
+    [Header("Dash")]
+    [Space(5)]
+
+    [Range(0, 10)]
+    [SerializeField] private float dashForce = 10f;
+    [Range(0, 10)]
+    [SerializeField] private float dashDuration = 0.2f;
+    [Range(0, 10)]
+    [SerializeField] private float dashCooldown = 1f;
+
+    // ------------------------------------------------------\\ 
+
+    [Header("Vôo")]
+    [Space(5)]
+
+    [Range(0, 10)]
+    [SerializeField] private float glideForce = 1f;
+    [Range(0, 10)]
+    [SerializeField] private float glideDrag = 2f;
+
+    // ------------------------------------------------------\\ 
+
+    [Header("Manipulação do Tempo")]
+    [Space(5)]
+
+    [Range(0, 10)]
+    [SerializeField] private float slowTimeScale = 0.5f;
+
+    // ------------------------------------------------------\\ 
+
+    [Header("Configurações Adicionais")]
+    [Space(10)]
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private Volume volume;
+    [SerializeField] private Vignette vignette;
+    [SerializeField] private VisualEffect flamethrower;
+    // ------------------------------------------------------\\ 
+    #endregion
+
+    #region Privates
+
+    private bool isRunning = false;
     private bool planando = false;
-    private Rigidbody rb;
+    private bool isDashing = false;
+    private int remainingJumps;
+    private float originalMaxSpeed;
+    private float dashCooldownTimer = 0f;
     private Vector3 forceDirection = Vector3.zero;
-
-    [SerializeField]
-    private Camera playerCamera;
+    private Rigidbody rb;
     private Animator animator;
 
-    private int remainingJumps;
-    private bool isRunning = false;
-    private float originalMaxSpeed;
-
-    [SerializeField] private float slowTimeScale = 0.5f; // Ajuste a escala de tempo desejada para o SlowTime
-
-    public Volume volume; // Componente de volume
-    private Vignette vignette; // Efeito de vinheta
+    #endregion
 
     private void Awake()
     {
@@ -45,9 +105,6 @@ public class Character : MonoBehaviour
         animator = this.GetComponent<Animator>();
         originalMaxSpeed = maxSpeed;
         remainingJumps = maxJumps;
-
-
-      //  volume = GetComponent<Volume>();
         volume.profile.TryGet(out vignette);
     }
 
@@ -55,17 +112,22 @@ public class Character : MonoBehaviour
     {
         playerActionsAsset = new PlayerInputActions();
         move = playerActionsAsset.Player.Move;
-        glide = playerActionsAsset.Player.Glide; // Configuração da ação de glide
-        glide.performed += ctx => planando = true; // Iniciar o glide quando a ação for realizada
-        glide.canceled += ctx => planando = false; // Parar o glide quando a ação for cancelada
+        glide = playerActionsAsset.Player.Glide;
+        glide.performed += ctx => planando = true;
+        glide.canceled += ctx => planando = false;
 
-        slowTime = playerActionsAsset.Player.SlowTime; // Configuração da ação de SlowTime
-        slowTime.performed += ctx => ToggleSlowTime(); // Iniciar ou parar o SlowTime quando a ação for realizada
+        slowTime = playerActionsAsset.Player.SlowTime;
+        slowTime.performed += ctx => ToggleSlowTime();
+        attack = playerActionsAsset.Player.Attack;
+        attack.started += ctx => DoAttack();
+        attack.canceled += ctx => StopAttack();
+
+        dash = playerActionsAsset.Player.Dash; // Configuração da ação de dash
+        dash.performed += ctx => TryDash(); // Iniciar o dash quando a ação for realizada
 
         playerActionsAsset.Player.Jump.started += OnJumpStarted;
         playerActionsAsset.Player.Jump.canceled += OnJumpCanceled;
         playerActionsAsset.Player.Run.performed += ToggleRun;
-        playerActionsAsset.Player.Attack.started += DoAttack;
 
         playerActionsAsset.Enable();
     }
@@ -77,6 +139,10 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Se estiver no estado de dash, não aplicar outras forças
+        if (isDashing)
+            return;
+
         forceDirection += move.ReadValue<Vector2>().x * GetCameraRight(playerCamera) * movementForce;
         forceDirection += move.ReadValue<Vector2>().y * GetCameraForward(playerCamera) * movementForce;
 
@@ -124,6 +190,33 @@ public class Character : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
     }
 
+    private void TryDash()
+    {
+        // Verificar se o dash está em recarga
+        if (Time.time < dashCooldownTimer)
+            return;
+
+        // Aplicar a força do dash na direção do movimento atual
+        if (move.ReadValue<Vector2>().sqrMagnitude > 0.1f)
+        {
+            Vector3 dashDirection = rb.velocity.normalized;
+            rb.AddForce(dashDirection * dashForce, ForceMode.Impulse);
+
+            // Iniciar o tempo de recarga do dash
+            dashCooldownTimer = Time.time + dashCooldown;
+
+            // Iniciar a duração do dash
+            StartCoroutine(DashCooldown());
+        }
+    }
+
+    private IEnumerator DashCooldown()
+    {
+        isDashing = true;
+        yield return new WaitForSeconds(dashDuration);
+        isDashing = false;
+    }
+
     private Vector3 GetCameraForward(Camera playerCamera)
     {
         Vector3 forward = playerCamera.transform.forward;
@@ -169,6 +262,33 @@ public class Character : MonoBehaviour
         isRunning = obj.ReadValueAsButton();
     }
 
+    private void DoAttack()
+    {
+        flamethrower.Play();
+    }
+
+    private void StopAttack()
+    {
+        flamethrower.Stop();
+    }
+
+    private void ToggleSlowTime()
+    {
+        Debug.Log("Slow Time atual: " + (Time.timeScale));
+        if (Time.timeScale == 1.0f)
+        {
+            Time.timeScale = slowTimeScale;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            vignette.intensity.Override(0.4f);
+        }
+        else
+        {
+            Time.timeScale = 1.0f;
+            Time.fixedDeltaTime = 0.02f;
+            vignette.intensity.Override(0f);
+        }
+    }
+
     private bool IsGrounded()
     {
         Ray ray = new Ray(this.transform.position + Vector3.up * 0.25f, Vector3.down);
@@ -178,29 +298,15 @@ public class Character : MonoBehaviour
             return false;
     }
 
-    private void DoAttack(InputAction.CallbackContext obj)
+    private void OnApplicationFocus(bool focus)
     {
-        Debug.Log("atacou!");
-    }
-
-    private void ToggleSlowTime()
-    {
-        Debug.Log("Slow Time atual: " + (Time.timeScale));
-        if (Time.timeScale == 1.0f) // Se a escala de tempo estiver normal (1.0f), aplique a escala de tempo lenta
+        if (focus)
         {
-            Time.timeScale = slowTimeScale;
-            Time.fixedDeltaTime = 0.02f * Time.timeScale; // Ajuste o tempo fixo em conformidade
-
-            // Ajuste a intensidade da vinheta para 0.4f durante o SlowTime
-            vignette.intensity.Override(0.4f);
+            Cursor.lockState = CursorLockMode.Locked;
         }
-        else // Caso contrário, restaure a escala de tempo normal
+        else
         {
-            Time.timeScale = 1.0f;
-            Time.fixedDeltaTime = 0.02f; // Restaure o tempo fixo padrão
-
-            // Redefina a intensidade da vinheta para 0 durante o tempo normal
-            vignette.intensity.Override(0f);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

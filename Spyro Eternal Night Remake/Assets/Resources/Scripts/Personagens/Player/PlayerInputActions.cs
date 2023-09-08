@@ -89,6 +89,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""1247dd33-75ce-4ed2-a13f-5aad006c4271"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -205,11 +214,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ce5377f9-505d-4f6a-9c92-3bcbe9560962"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""SlowTime"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38e42672-0bec-4450-a87b-a4b15f1e60cf"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -244,6 +264,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_SlowTime = m_Player.FindAction("SlowTime", throwIfNotFound: true);
+        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -312,6 +333,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_SlowTime;
+    private readonly InputAction m_Player_Dash;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -323,6 +345,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @SlowTime => m_Wrapper.m_Player_SlowTime;
+        public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -353,6 +376,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @SlowTime.started += instance.OnSlowTime;
             @SlowTime.performed += instance.OnSlowTime;
             @SlowTime.canceled += instance.OnSlowTime;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -378,6 +404,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @SlowTime.started -= instance.OnSlowTime;
             @SlowTime.performed -= instance.OnSlowTime;
             @SlowTime.canceled -= instance.OnSlowTime;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -413,5 +442,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnSlowTime(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }
