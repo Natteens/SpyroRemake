@@ -15,7 +15,7 @@ public class Character : MonoBehaviour
     private InputAction glide;
     private InputAction slowTime;
     private InputAction attack;
-    private InputAction dash; // Nova InputAction para o dash
+    private InputAction dash; 
     #endregion
 
     #region Configurações
@@ -26,21 +26,23 @@ public class Character : MonoBehaviour
     [Header("Movimentação")]
     [Space(5)]
 
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float maxSpeed = 5f;
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float movementForce = 1f;
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float runSpeed = 10f;
+    [Range(0, 1000)]
+    [SerializeField] private float rotationSpeed;
 
     // ------------------------------------------------------\\ 
 
     [Header("Pulo")]
     [Space(5)]
 
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private int maxJumps = 2;
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float jumpForce = 5f;
 
     // ------------------------------------------------------\\ 
@@ -48,11 +50,11 @@ public class Character : MonoBehaviour
     [Header("Dash")]
     [Space(5)]
 
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float dashForce = 10f;
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float dashDuration = 0.2f;
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float dashCooldown = 1f;
 
     // ------------------------------------------------------\\ 
@@ -60,9 +62,9 @@ public class Character : MonoBehaviour
     [Header("Vôo")]
     [Space(5)]
 
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float glideForce = 1f;
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float glideDrag = 2f;
 
     // ------------------------------------------------------\\ 
@@ -70,14 +72,14 @@ public class Character : MonoBehaviour
     [Header("Manipulação do Tempo")]
     [Space(5)]
 
-    [Range(0, 10)]
+    [Range(0, 100)]
     [SerializeField] private float slowTimeScale = 0.5f;
 
     // ------------------------------------------------------\\ 
 
     [Header("Configurações Adicionais")]
     [Space(10)]
-    [SerializeField] private Camera playerCamera;
+    [SerializeField] private Transform cameraTransform;
     [SerializeField] private Volume volume;
     [SerializeField] private Vignette vignette;
     [SerializeField] private VisualEffect flamethrower;
@@ -95,6 +97,7 @@ public class Character : MonoBehaviour
     private Vector3 forceDirection = Vector3.zero;
     private Rigidbody rb;
     private Animator animator;
+   
 
     #endregion
 
@@ -122,8 +125,8 @@ public class Character : MonoBehaviour
         attack.started += ctx => DoAttack();
         attack.canceled += ctx => StopAttack();
 
-        dash = playerActionsAsset.Player.Dash; // Configuração da ação de dash
-        dash.performed += ctx => TryDash(); // Iniciar o dash quando a ação for realizada
+        dash = playerActionsAsset.Player.Dash; 
+        dash.performed += ctx => TryDash(); 
 
         playerActionsAsset.Player.Jump.started += OnJumpStarted;
         playerActionsAsset.Player.Jump.canceled += OnJumpCanceled;
@@ -139,12 +142,12 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Se estiver no estado de dash, não aplicar outras forças
         if (isDashing)
             return;
 
-        forceDirection += move.ReadValue<Vector2>().x * GetCameraRight(playerCamera) * movementForce;
-        forceDirection += move.ReadValue<Vector2>().y * GetCameraForward(playerCamera) * movementForce;
+        Vector2 moveInput = move.ReadValue<Vector2>();
+        Vector3 moveDirection = cameraTransform.forward * moveInput.y + cameraTransform.right * moveInput.x;
+        moveDirection.y = 0; // Mantém a direção no plano horizontal.
 
         if (isRunning)
         {
@@ -160,8 +163,7 @@ public class Character : MonoBehaviour
             rb.AddForce(Vector3.up * glideForce, ForceMode.Force);
         }
 
-        rb.AddForce(forceDirection, ForceMode.Impulse);
-        forceDirection = Vector3.zero;
+        rb.AddForce(moveDirection.normalized * movementForce, ForceMode.Impulse);
 
         if (planando)
         {
@@ -169,43 +171,40 @@ public class Character : MonoBehaviour
         }
 
         if (rb.velocity.y < 0f)
+        {
             rb.velocity -= Vector3.down * Physics.gravity.y * Time.fixedDeltaTime;
+        }
 
         Vector3 horizontalVelocity = rb.velocity;
         horizontalVelocity.y = 0;
+
         if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
+        {
             rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
+        }
 
-        LookAt();
+        if (moveDirection != Vector3.zero)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+        }
     }
-
-    private void LookAt()
-    {
-        Vector3 direction = rb.velocity;
-        direction.y = 0f;
-
-        if (move.ReadValue<Vector2>().sqrMagnitude > 0.1f && direction.sqrMagnitude > 0.1f)
-            this.rb.rotation = Quaternion.LookRotation(direction, Vector3.up);
-        else
-            rb.angularVelocity = Vector3.zero;
-    }
-
     private void TryDash()
     {
-        // Verificar se o dash está em recarga
+       
         if (Time.time < dashCooldownTimer)
             return;
 
-        // Aplicar a força do dash na direção do movimento atual
+       
         if (move.ReadValue<Vector2>().sqrMagnitude > 0.1f)
         {
             Vector3 dashDirection = rb.velocity.normalized;
             rb.AddForce(dashDirection * dashForce, ForceMode.Impulse);
 
-            // Iniciar o tempo de recarga do dash
+          
             dashCooldownTimer = Time.time + dashCooldown;
 
-            // Iniciar a duração do dash
+            
             StartCoroutine(DashCooldown());
         }
     }
@@ -217,30 +216,16 @@ public class Character : MonoBehaviour
         isDashing = false;
     }
 
-    private Vector3 GetCameraForward(Camera playerCamera)
-    {
-        Vector3 forward = playerCamera.transform.forward;
-        forward.y = 0;
-        return forward.normalized;
-    }
-
-    private Vector3 GetCameraRight(Camera playerCamera)
-    {
-        Vector3 right = playerCamera.transform.right;
-        right.y = 0;
-        return right.normalized;
-    }
-
     private void OnJumpStarted(InputAction.CallbackContext obj)
     {
         if (IsGrounded())
         {
-            forceDirection += Vector3.up * jumpForce;
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             remainingJumps = maxJumps - 1;
         }
         else if (remainingJumps > 0)
         {
-            forceDirection += Vector3.up * jumpForce;
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             remainingJumps--;
         }
         else if (!planando)
@@ -291,22 +276,12 @@ public class Character : MonoBehaviour
 
     private bool IsGrounded()
     {
-        Ray ray = new Ray(this.transform.position + Vector3.up * 0.25f, Vector3.down);
+        Ray ray = new Ray(this.transform.position + Vector3.up * 0.5f, Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit hit, 2f))
             return true;
         else
             return false;
     }
 
-    private void OnApplicationFocus(bool focus)
-    {
-        if (focus)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
-    }
+   
 }

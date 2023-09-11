@@ -20,7 +20,7 @@
                     "id": "b0fb34ef-f16b-4a8a-b247-5c343864cff7",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -43,7 +43,7 @@
                 },
                 {
                     "name": "Attack",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "4d8841e4-a529-4d28-bb48-06c92fe8fe8d",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -72,6 +72,15 @@
                     "name": "Dash",
                     "type": "Button",
                     "id": "1247dd33-75ce-4ed2-a13f-5aad006c4271",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FuryAttack",
+                    "type": "Button",
+                    "id": "914fe341-fec6-44b7-9d04-2bbc52a270dc",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -158,20 +167,9 @@
                 },
                 {
                     "name": "",
-                    "id": "f0dff212-28ca-419f-8a27-2c2654ae6850",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "5ef1e3a7-ac35-439b-b28f-bdf01a50c7d5",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Attack",
@@ -208,6 +206,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee8d1bd4-f2e7-43f8-9396-2480da69f59f",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FuryAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9b56f66c-c73a-45b5-b4f8-a95843a9a2bb",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.05,y=0.05)",
+                    "groups": "",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
