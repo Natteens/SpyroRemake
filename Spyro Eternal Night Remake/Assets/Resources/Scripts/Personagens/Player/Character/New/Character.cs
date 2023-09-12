@@ -82,12 +82,11 @@ public class Character : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Volume volume;
     [SerializeField] private Vignette vignette;
-    [SerializeField] private VisualEffect flamethrower;
+    [SerializeField] private VisualEffect[] vfx;
     // ------------------------------------------------------\\ 
     #endregion
 
     #region Privates
-
     private bool isRunning = false;
     private bool planando = false;
     private bool isDashing = false;
@@ -97,7 +96,6 @@ public class Character : MonoBehaviour
     private Vector3 forceDirection = Vector3.zero;
     private Rigidbody rb;
     private Animator animator;
-   
 
     #endregion
 
@@ -116,18 +114,16 @@ public class Character : MonoBehaviour
         playerActionsAsset = new PlayerInputActions();
         move = playerActionsAsset.Player.Move;
         glide = playerActionsAsset.Player.Glide;
+        attack = playerActionsAsset.Player.Attack;
+        dash = playerActionsAsset.Player.Dash;
+        slowTime = playerActionsAsset.Player.SlowTime;
         glide.performed += ctx => planando = true;
         glide.canceled += ctx => planando = false;
-
-        slowTime = playerActionsAsset.Player.SlowTime;
+       
         slowTime.performed += ctx => ToggleSlowTime();
-        attack = playerActionsAsset.Player.Attack;
         attack.started += ctx => DoAttack();
         attack.canceled += ctx => StopAttack();
-
-        dash = playerActionsAsset.Player.Dash; 
-        dash.performed += ctx => TryDash(); 
-
+        dash.performed += ctx => TryDash();
         playerActionsAsset.Player.Jump.started += OnJumpStarted;
         playerActionsAsset.Player.Jump.canceled += OnJumpCanceled;
         playerActionsAsset.Player.Run.performed += ToggleRun;
@@ -249,12 +245,12 @@ public class Character : MonoBehaviour
 
     private void DoAttack()
     {
-        flamethrower.Play();
+        vfx[0].Play();
     }
 
     private void StopAttack()
     {
-        flamethrower.Stop();
+       vfx[0].Stop();
     }
 
     private void ToggleSlowTime()

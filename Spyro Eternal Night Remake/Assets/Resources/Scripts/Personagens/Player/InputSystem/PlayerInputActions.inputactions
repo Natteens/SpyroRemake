@@ -158,7 +158,7 @@
                     "name": "",
                     "id": "96e3652f-3b83-434b-b29f-088a0ac422c2",
                     "path": "<Keyboard>/space",
-                    "interactions": "Hold",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Glide",
