@@ -1,0 +1,124 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Status : MonoBehaviour
+{
+    [HideInInspector]
+    public float maxHealth = 100f;
+    [HideInInspector]
+    public float maxMana = 100f;
+    [HideInInspector]
+    public float maxFuryEnergy = 100f;
+
+   // [HideInInspector]
+    public float currentHealth;
+  //  [HideInInspector]
+    public float currentMana;
+    //[HideInInspector]
+    public float currentFuryEnergy;
+
+    public Slider energySlider;
+    public Slider healthSlider;
+
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+        currentMana = maxMana;
+        currentFuryEnergy = 0f;
+    }
+
+    private void Update()
+    {
+        UpdateSlider(currentMana, maxMana, energySlider);
+        UpdateSlider(currentHealth, maxHealth, healthSlider);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0f)
+        {
+            currentHealth = 0f;
+            Die();
+        }
+    }
+
+    public void UseMana(float amount)
+    {
+        if (currentMana >= amount)
+        {
+            currentMana -= amount;
+            currentMana = Mathf.Ceil(currentMana);
+        }
+        else
+        {
+            Debug.Log("Mana insuficiente!");
+        }
+    }
+
+    public void RechargeMana(float amount)
+    {
+        currentMana += amount;
+
+        if (currentMana > maxMana)
+        {
+            currentMana = maxMana;
+        }
+    }
+
+    public void GainFuryEnergy(float amount)
+    {
+        currentFuryEnergy += amount;
+
+        if (currentFuryEnergy > maxFuryEnergy)
+        {
+            currentFuryEnergy = maxFuryEnergy;
+        }
+    }
+
+    public void UseFuryAttack(float furyCost)
+    {
+        if (currentFuryEnergy >= furyCost)
+        {
+            currentFuryEnergy -= furyCost;
+        }
+        else
+        {
+            Debug.Log("Energia de fúria insuficiente!");
+        }
+    }
+
+    public void RechargeHealth(float amount)
+    {
+        currentHealth += amount;
+
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Morreu!");
+    }
+
+
+    private void UpdateSlider(float currentValue, float maxValue, Slider slider)
+    {
+        if (slider != null)
+        {
+            float clampedValue = Mathf.Clamp(currentValue, 0f, maxValue);
+            slider.value = clampedValue / maxValue;
+            int roundedValue = Mathf.RoundToInt(currentValue);
+            slider.value = roundedValue / maxValue;
+        }
+    }
+
+}
+
+

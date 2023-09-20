@@ -42,12 +42,12 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack",
-                    "type": "PassThrough",
+                    "name": "FireAttack",
+                    "type": "Button",
                     "id": "4d8841e4-a529-4d28-bb48-06c92fe8fe8d",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "initialStateCheck": false
                 },
                 {
@@ -84,6 +84,15 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "ac873ff9-3953-4ea6-aeb1-b4373a9b520b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
                     "initialStateCheck": false
                 }
             ],
@@ -158,7 +167,7 @@
                     "name": "",
                     "id": "96e3652f-3b83-434b-b29f-088a0ac422c2",
                     "path": "<Keyboard>/space",
-                    "interactions": "Press(behavior=2)",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Glide",
@@ -168,11 +177,11 @@
                 {
                     "name": "",
                     "id": "5ef1e3a7-ac35-439b-b28f-bdf01a50c7d5",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "Press(behavior=2)",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Attack",
+                    "action": "FireAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -228,6 +237,17 @@
                     "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.05,y=0.05)",
                     "groups": "",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fcde9e12-7c60-439b-9075-d96a6897f5e0",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
