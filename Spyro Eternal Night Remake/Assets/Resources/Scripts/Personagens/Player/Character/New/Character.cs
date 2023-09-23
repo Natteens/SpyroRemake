@@ -10,7 +10,7 @@ using UnityEngine.VFX;
 public class Character : MonoBehaviour
 {
     #region InputActions
-    private PlayerInputActions playerActionsAsset;
+    public PlayerInputActions playerActionsAsset;
     private InputAction move;
     private InputAction glide;
     private InputAction slowTime;
@@ -39,7 +39,8 @@ public class Character : MonoBehaviour
     [SerializeField] private byte speed = 5;
     [SerializeField] private byte RunSpeed = 10;
     [SerializeField] private float turnSmoothTime = 0.1f;
-    private bool canMove = true;
+    [HideInInspector]
+    public bool canMove = true;
     private float turnSmoothVelocity;
     // ------------------------------------------------------\\ 
 
@@ -396,6 +397,7 @@ public class Character : MonoBehaviour
         {
             accumulatedManaCost += manaCostPerSecond;
             dano = 5;
+            
             if (accumulatedManaCost >= 1f)
             {
                 int roundedManaCost = Mathf.CeilToInt(accumulatedManaCost);
@@ -403,7 +405,7 @@ public class Character : MonoBehaviour
                 {
                     status.UseMana(roundedManaCost);
                     accumulatedManaCost -= roundedManaCost;
-                    
+                    CheckCollisions();
                 }
                 else
                 {
@@ -488,8 +490,9 @@ public class Character : MonoBehaviour
     #region FuryAttack
     private void FuryAttack()
     {
-        if (!isUsingFuryAttack)
+        if (!isUsingFuryAttack && status.currentFuryEnergy >= 100)
         {
+            status.currentFuryEnergy -= 100;
             StartCoroutine(ExecuteFuryAttack());
         }
     }
@@ -500,7 +503,7 @@ public class Character : MonoBehaviour
         dano = 50;
         damageColliders[4].SetActive(true);
         isUsingFuryAttack = true;
-
+        CheckCollisions();
         isRunning = false;
         isUsingFireBreath = false;
         isAttacking = false;

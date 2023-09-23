@@ -39,9 +39,6 @@ public class Loot : MonoBehaviour
 
         if (distanceToPlayer <= followPlayerRadius)
             isFollowingPlayer = true;
-        else
-            isFollowingPlayer = false;
-
 
         if (isFollowingPlayer)
         {

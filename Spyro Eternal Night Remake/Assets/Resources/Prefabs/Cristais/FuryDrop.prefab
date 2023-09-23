@@ -114,7 +114,7 @@ MonoBehaviour:
   statType: 2
   recoveryAmount: 20
   followPlayerRadius: 5
-  followSpeed: 5
+  followSpeed: 8
 --- !u!54 &5637976737448235475
 Rigidbody:
   m_ObjectHideFlags: 0
