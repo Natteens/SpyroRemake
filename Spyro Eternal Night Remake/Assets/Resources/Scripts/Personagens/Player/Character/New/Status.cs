@@ -21,6 +21,7 @@ public class Status : MonoBehaviour
 
     public Slider energySlider;
     public Slider healthSlider;
+    public Slider furySlider;
 
 
     private void Start()
@@ -34,6 +35,7 @@ public class Status : MonoBehaviour
     {
         UpdateSlider(currentMana, maxMana, energySlider);
         UpdateSlider(currentHealth, maxHealth, healthSlider);
+        UpdateSlider(currentFuryEnergy, maxFuryEnergy, furySlider);
     }
 
     public void TakeDamage(float damage)

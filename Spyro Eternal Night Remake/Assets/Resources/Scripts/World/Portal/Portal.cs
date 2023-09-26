@@ -9,8 +9,8 @@ public class Portal : MonoBehaviour
     public float teleportDelay = 2.0f;
     public float portalDuration = 3.0f;
     public Collider triggerCollider;
-    public VisualEffect VFX;
-    public Transform TPcenter; 
+    public VisualEffect[] VFX;
+    public Transform TPcenter;
 
     private bool playerInsidePortal = false;
     private GameObject playerObject;
@@ -32,29 +32,31 @@ public class Portal : MonoBehaviour
             playerInput.DeactivateInput();
             charController = playerObject.GetComponent<CharacterController>();
             charController.enabled = false;
-            CentralizePlayer(); 
+            CentralizePlayer();
             StartCoroutine(TeleportPlayer());
         }
     }
 
     private void CentralizePlayer()
     {
-      playerObject.transform.position = TPcenter.position;
+        playerObject.transform.position = TPcenter.position;
     }
 
     private IEnumerator TeleportPlayer()
     {
-        VFX.Play();
+        VFX[0].Play();
+
 
         yield return new WaitForSeconds(teleportDelay);
-        yield return new WaitForSeconds(portalDuration);
 
         if (destination != null && playerObject != null)
         {
             playerObject.transform.position = destination.position;
+            VFX[1].Play();
         }
+        VFX[0].Stop();
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(portalDuration);
 
         playerCharacter.playerActionsAsset.Enable();
 
@@ -68,7 +70,7 @@ public class Portal : MonoBehaviour
             charController.enabled = true;
         }
 
-        VFX.Stop();
+        VFX[1].Stop();
         playerInsidePortal = false;
     }
 }

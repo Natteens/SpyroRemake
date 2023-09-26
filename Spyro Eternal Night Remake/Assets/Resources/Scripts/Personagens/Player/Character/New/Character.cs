@@ -157,6 +157,9 @@ public class Character : MonoBehaviour
 
         move = playerActionsAsset.Player.Move;
 
+        playerActionsAsset.Player.Run.performed += ToggleRun;
+
+
         glide = playerActionsAsset.Player.Glide;
         glide.performed += ctx => planando = true;
         glide.canceled += ctx => planando = false;
@@ -177,8 +180,7 @@ public class Character : MonoBehaviour
 
         playerActionsAsset.Player.Jump.started += OnJumpStarted;
         playerActionsAsset.Player.Jump.canceled += OnJumpCanceled;
-        playerActionsAsset.Player.Run.performed += ToggleRun;
-
+      
         furyAttack = playerActionsAsset.Player.FuryAttack;
         furyAttack.performed += ctx => FuryAttack();
 
