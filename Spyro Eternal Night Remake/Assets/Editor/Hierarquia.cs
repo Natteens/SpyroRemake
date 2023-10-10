@@ -1,12 +1,11 @@
-#if UNITY_EDITOR
 using System;
 using UnityEditor;
 using UnityEngine;
 
 [InitializeOnLoad]
-public class Hierarquia
+public class Hierarquia 
 {
-    static Hierarquia()
+   static Hierarquia()
     {
         EditorApplication.hierarchyWindowItemOnGUI += RenderObjects;
     }
@@ -18,15 +17,13 @@ public class Hierarquia
 
         if (gameObject.TryGetComponent<CustomHeaderObject>(out var customHeaderObject))
         {
-            EditorGUI.DrawRect(selectionRect, customHeaderObject.backgroundColor);
-            EditorGUI.LabelField(selectionRect, gameObject.name.ToUpper(), new GUIStyle()
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontStyle = FontStyle.Bold,
-                normal = new GUIStyleState() { textColor = customHeaderObject.TextColor }
-            });
+             EditorGUI.DrawRect(selectionRect, customHeaderObject.backgroundColor);
+             EditorGUI.LabelField(selectionRect, gameObject.name.ToUpper(), new GUIStyle()
+             {
+                 alignment = TextAnchor.MiddleCenter,
+                 fontStyle = FontStyle.Bold,
+                 normal = new GUIStyleState() { textColor = customHeaderObject.TextColor }
+             });
         }
     }
 }
-
-#endif
