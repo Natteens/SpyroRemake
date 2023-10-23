@@ -130,7 +130,7 @@ public class Character : MonoBehaviour
     private bool isRunning = false;
     private bool planando = false;
     private bool isDashing = false;
-    private bool isUsingFireBreath = false;
+    public bool isUsingFireBreath { get; private set; } = false;
     private byte remainingJumps;
     private CharacterController character;
     private Animator animator;

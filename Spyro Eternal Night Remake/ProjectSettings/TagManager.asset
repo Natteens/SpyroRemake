@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Chao
   - Ground
+  - Enemy
+  - FogoDamage
   layers:
   - Default
   - TransparentFX
@@ -19,9 +21,9 @@ TagManager:
   - DamagePlayer
   - Cristal
   - FallDie
-  - 
-  - 
-  - 
+  - Enemy
+  - Pedestal
+  - SceneTrigger
   - 
   - 
   - 
