@@ -133,19 +133,31 @@ public class Character : MonoBehaviour
     public bool isUsingFireBreath { get; private set; } = false;
     private byte remainingJumps;
     private CharacterController character;
-    private Animator animator;
+    [SerializeField]private Animator anim;
     private Vector3 direction;
     private Vector3 dashDirection;
     private Status status;
     private Transform objVFX;
     #endregion
 
+    #region Anims
+    private readonly string animIdle = "idle";
+    private readonly string animWalk = "walk";
+    private readonly string animRun = "run";
+    private readonly string animJump = "jump";
+
+    private readonly string animFireBreath = "fireBreath";
+    private readonly string animAttack = "attack";
+    private readonly string animDash = "dash";
+    private readonly string animFuryAttack = "furyAttack";
+
+    private readonly string animComboState = "comboState";
+    #endregion
     private void Awake()
     {
         character = GetComponent<CharacterController>();
         status = GetComponent<Status>();
         playerActionsAsset = new PlayerInputActions();
-        animator = this.GetComponent<Animator>();
         remainingJumps = maxJumps;
         volume.profile.TryGet(out vignette);
         objVFX = VFX[4].transform;
@@ -242,15 +254,28 @@ public class Character : MonoBehaviour
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
             Vector3 moveDir = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
-
             character.Move(moveDir.normalized * (isRunning ? RunSpeed : speed) * Time.deltaTime);
+
+            if (isRunning)
+            {
+                anim.SetFloat(animWalk, RunSpeed);
+                anim.SetBool(animRun, true);
+            }
+            else
+            {
+                anim.SetFloat(animWalk, speed);
+                anim.SetBool(animRun, false);
+            }
+            anim.SetBool(animIdle, false);
         }
         else
         {
             Vector3 moveDir = Vector3.zero;
             character.Move(moveDir);
+            anim.SetFloat(animWalk, 0f);
+            anim.SetBool(animRun, false);
+            anim.SetBool(animIdle, true);
         }
 
         if (planando)
@@ -258,6 +283,7 @@ public class Character : MonoBehaviour
             verticalVelocity = -glideDrag;
         }
     }
+
 
     #endregion
     #region Dash
@@ -599,3 +625,4 @@ public class Character : MonoBehaviour
     } 
     #endregion
 }
+
