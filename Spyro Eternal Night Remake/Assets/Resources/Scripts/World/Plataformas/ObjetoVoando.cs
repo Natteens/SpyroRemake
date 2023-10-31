@@ -12,7 +12,7 @@ public class ObjetoVoando : MonoBehaviour
         initialPosition = transform.position;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         float verticalOffset = Mathf.Sin(Time.time * smoothness) * hoverAmplitude;
         transform.position = initialPosition + new Vector3(0f, verticalOffset, 0f);

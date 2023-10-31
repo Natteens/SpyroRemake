@@ -140,19 +140,6 @@ public class Character : MonoBehaviour
     private Transform objVFX;
     #endregion
 
-    #region Anims
-    private readonly string animIdle = "idle";
-    private readonly string animWalk = "walk";
-    private readonly string animRun = "run";
-    private readonly string animJump = "jump";
-
-    private readonly string animFireBreath = "fireBreath";
-    private readonly string animAttack = "attack";
-    private readonly string animDash = "dash";
-    private readonly string animFuryAttack = "furyAttack";
-
-    private readonly string animComboState = "comboState";
-    #endregion
     private void Awake()
     {
         character = GetComponent<CharacterController>();
@@ -237,8 +224,11 @@ public class Character : MonoBehaviour
                 Debug.Log("Combo Reset!");
             }
         }
+        // ----------
 
     }
+
+    #region metodos
 
     #region Move
     private void Movement()
@@ -249,33 +239,28 @@ public class Character : MonoBehaviour
         Vector2 moveInput = move.ReadValue<Vector2>();
         direction = new Vector3(moveInput.x, 0, moveInput.y).normalized;
 
-        if (direction.magnitude >= 0.1f)
+        float moveSpeed = direction.magnitude * (isRunning ? RunSpeed : speed);
+
+        if (moveSpeed >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
             Vector3 moveDir = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
-            character.Move(moveDir.normalized * (isRunning ? RunSpeed : speed) * Time.deltaTime);
+            character.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
 
-            if (isRunning)
-            {
-                anim.SetFloat(animWalk, RunSpeed);
-                anim.SetBool(animRun, true);
-            }
-            else
-            {
-                anim.SetFloat(animWalk, speed);
-                anim.SetBool(animRun, false);
-            }
-            anim.SetBool(animIdle, false);
+            anim.SetBool("idle", false);
+            anim.SetBool("movement", true);
+            anim.SetFloat("move", moveSpeed);
         }
         else
         {
             Vector3 moveDir = Vector3.zero;
             character.Move(moveDir);
-            anim.SetFloat(animWalk, 0f);
-            anim.SetBool(animRun, false);
-            anim.SetBool(animIdle, true);
+
+            anim.SetBool("idle", true);
+            anim.SetBool("movement", false);
+            anim.SetFloat("move", 0f);
         }
 
         if (planando)
@@ -283,7 +268,6 @@ public class Character : MonoBehaviour
             verticalVelocity = -glideDrag;
         }
     }
-
 
     #endregion
     #region Dash
@@ -370,6 +354,7 @@ public class Character : MonoBehaviour
         if (planando)
         {
             planando = false;
+
         }
         jumpStartTime = 0;
     }
@@ -381,6 +366,7 @@ public class Character : MonoBehaviour
         if (elapsedJumpTime >= jumpDuration)
         {
             isJumping = false;
+
         }
         else
         {
@@ -402,6 +388,7 @@ public class Character : MonoBehaviour
     {
         if (status.currentMana >= manaCost)
         {
+            anim.SetBool("fireBreath", true);
             isUsingFireBreath = true;
             VFX[0].Play();
             damageColliders[0].SetActive(true);
@@ -410,6 +397,7 @@ public class Character : MonoBehaviour
     }
     private void StopFlameAttack()
     {
+        anim.SetBool("fireBreath", false);
         isUsingFireBreath = false;
         VFX[0].Stop();
         damageColliders[0].SetActive(false);
@@ -425,7 +413,7 @@ public class Character : MonoBehaviour
         {
             accumulatedManaCost += manaCostPerSecond;
             dano = 5;
-            
+
             if (accumulatedManaCost >= 1f)
             {
                 int roundedManaCost = Mathf.CeilToInt(accumulatedManaCost);
@@ -440,6 +428,7 @@ public class Character : MonoBehaviour
                     isUsingFireBreath = false;
                     VFX[0].Stop();
                     damageColliders[0].SetActive(false);
+                    anim.SetBool("fireBreath", false);
                 }
             }
 
@@ -465,6 +454,9 @@ public class Character : MonoBehaviour
                         currentVFXIndex = 1;
                         damageColliders[1].SetActive(true);
                         comboTimer = 0;
+
+                        // anim
+                        anim.SetTrigger("attack1");
                         break;
                     case ComboState.FirstAttack:
                         comboState = ComboState.SecondAttack;
@@ -474,6 +466,9 @@ public class Character : MonoBehaviour
                         currentVFXIndex = 2;
                         damageColliders[2].SetActive(true);
                         comboTimer = 0;
+
+                        // anim
+                        anim.SetTrigger("attack2");
                         break;
                     case ComboState.SecondAttack:
                         comboState = ComboState.ThirdAttack;
@@ -483,12 +478,18 @@ public class Character : MonoBehaviour
                         currentVFXIndex = 3;
                         damageColliders[3].SetActive(true);
                         comboTimer = 0;
+
+                        anim.SetTrigger("attack3");
                         break;
                     case ComboState.ThirdAttack:
                         comboState = ComboState.None;
                         Debug.Log("Combo Reset!");
+
+                        anim.ResetTrigger("attack1");
+                        anim.ResetTrigger("attack2");
+                        anim.ResetTrigger("attack3");
                         break;
-                } 
+                }
                 CheckCollisions();
                 StartCoroutine(WaitForVFXToEnd(vfxDuration));
                 canAttack = false;
@@ -498,6 +499,7 @@ public class Character : MonoBehaviour
         else
         {
             isAttacking = false;
+            
         }
     }
     private IEnumerator AttackCooldown()
@@ -579,7 +581,7 @@ public class Character : MonoBehaviour
 
                     foreach (Collider hitCollider in hitColliders)
                     {
-                       
+
                         if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Cristal"))
                         {
                             Cristais cristal = hitCollider.gameObject.GetComponent<Cristais>();
@@ -595,7 +597,7 @@ public class Character : MonoBehaviour
             }
         }
 
-       
+
         cristaisColididos.Clear();
     }
 
@@ -622,7 +624,11 @@ public class Character : MonoBehaviour
             remainingJumps = maxJumps;
             jumpStartTime = 0;
         }
-    } 
+    }
+    #endregion 
+
     #endregion
+
+
 }
 
