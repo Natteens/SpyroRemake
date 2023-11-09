@@ -11,24 +11,30 @@ public class Status : MonoBehaviour
     public float maxMana = 100f;
     [HideInInspector]
     public float maxFuryEnergy = 100f;
+    [HideInInspector]
+    public float maxTime = 100f;
 
-   // [HideInInspector]
+    // [HideInInspector]
     public float currentHealth;
   //  [HideInInspector]
     public float currentMana;
     //[HideInInspector]
     public float currentFuryEnergy;
 
+    public float currentTimeSlow;
+
     public Slider energySlider;
     public Slider healthSlider;
     public Slider furySlider;
-
+    public Slider timeSlider;
+    public Character p;
 
     private void Start()
     {
         currentHealth = maxHealth;
         currentMana = maxMana;
         currentFuryEnergy = 0f;
+        currentTimeSlow = 0f;
     }
 
     private void Update()
@@ -36,6 +42,7 @@ public class Status : MonoBehaviour
         UpdateSlider(currentMana, maxMana, energySlider);
         UpdateSlider(currentHealth, maxHealth, healthSlider);
         UpdateSlider(currentFuryEnergy, maxFuryEnergy, furySlider);
+        UpdateSlider(currentTimeSlow, maxTime, timeSlider);
     }
 
     public void TakeDamage(float damage)
@@ -59,7 +66,7 @@ public class Status : MonoBehaviour
         else
         {
             Debug.Log("Mana insuficiente!");
-        }
+        }    
     }
 
     public void RechargeMana(float amount)
@@ -107,6 +114,10 @@ public class Status : MonoBehaviour
     private void Die()
     {
         Debug.Log("Morreu!");
+        p.ISDEAD = true;
+        p.canAttack = false;
+
+        Invoke("RestartScene", 3.0f);
     }
 
 

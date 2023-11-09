@@ -63,7 +63,7 @@ public class Character : MonoBehaviour
     [Range(0, 100)]
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float turnSmoothTimeDash = 0.1f;
-    [SerializeField] private float dashCooldownTime = 2.0f; 
+    [SerializeField] private float dashCooldownTime = 2.0f;
     private float lastDashTime;
     // ------------------------------------------------------\\ 
 
@@ -90,7 +90,7 @@ public class Character : MonoBehaviour
     [Space(10)]
     [SerializeField] private short dano;
     [SerializeField] private float vfxDuration = 0.5f;
-    [SerializeField] private bool canAttack = true;
+    [HideInInspector] public bool canAttack = true;
     [SerializeField] private float attackCooldown = 1.0f;
     [SerializeField] private int currentComboStep = 0;
     [SerializeField] private float comboTimer = 0;
@@ -138,10 +138,12 @@ public class Character : MonoBehaviour
     private Vector3 dashDirection;
     private Status status;
     private Transform objVFX;
+    public bool ISDEAD = false;
     #endregion
 
     private void Awake()
     {
+        ISDEAD = false;
         character = GetComponent<CharacterController>();
         status = GetComponent<Status>();
         playerActionsAsset = new PlayerInputActions();
@@ -191,41 +193,40 @@ public class Character : MonoBehaviour
         playerActionsAsset.Disable();
     }
 
-    private void Update()
-    {
-       if (isUsingFuryAttack)
-        {     
-            Vector3 oppositeDirection = objVFX.position - cameraTransform.position;
-            oppositeDirection.y = 0f;          
-            if (oppositeDirection != Vector3.zero)
-            {
-                objVFX.rotation = Quaternion.LookRotation(-oppositeDirection);
-            }
-        }
-    }
-
     private void FixedUpdate()
     {
-        if (isDashing)
-            return;
-
-        Movement();
-        if (isJumping)
-            HandleJump();
-
-        Gravity();
-        if (comboState != ComboState.None)
+        if (!ISDEAD)
         {
-            comboTimer += Time.deltaTime;
+            if (isDashing)
+                return;
 
-            if (comboTimer >= 2)
+            Movement();
+            if (isJumping)
+                HandleJump();
+
+            Gravity();
+            if (comboState != ComboState.None)
             {
-                comboState = ComboState.None;
-                Debug.Log("Combo Reset!");
+                comboTimer += Time.deltaTime;
+
+                if (comboTimer >= 2)
+                {
+                    comboState = ComboState.None;
+                    Debug.Log("Combo Reset!");
+                }
+            }
+
+
+            if (isUsingFuryAttack)
+            {
+                Vector3 oppositeDirection = objVFX.position - cameraTransform.position;
+                oppositeDirection.y = 0f;
+                if (oppositeDirection != Vector3.zero)
+                {
+                    objVFX.rotation = Quaternion.LookRotation(-oppositeDirection);
+                }
             }
         }
-        // ----------
-
     }
 
     #region metodos
