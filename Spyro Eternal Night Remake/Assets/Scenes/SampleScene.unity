@@ -15895,6 +15895,11 @@ PrefabInstance:
       objectReference: {fileID: 279094881}
     - target: {fileID: 1514539217189894834, guid: 6abdde17127ec644ba16039c9d987cb4,
         type: 3}
+      propertyPath: timeSlider
+      value: 
+      objectReference: {fileID: 2527192377477463196}
+    - target: {fileID: 1514539217189894834, guid: 6abdde17127ec644ba16039c9d987cb4,
+        type: 3}
       propertyPath: energySlider
       value: 
       objectReference: {fileID: 518123092}
@@ -15988,6 +15993,11 @@ PrefabInstance:
       propertyPath: volume
       value: 
       objectReference: {fileID: 832575518}
+    - target: {fileID: 8155174771164831268, guid: 6abdde17127ec644ba16039c9d987cb4,
+        type: 3}
+      propertyPath: timeCost
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 8155174771164831268, guid: 6abdde17127ec644ba16039c9d987cb4,
         type: 3}
       propertyPath: m_Enabled
@@ -16194,6 +16204,16 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9117293853137180190, guid: bb73b99f4532a3e40983e1045d1cfe51,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9117293853137180190, guid: bb73b99f4532a3e40983e1045d1cfe51,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb73b99f4532a3e40983e1045d1cfe51, type: 3}
 --- !u!224 &2527192377477463195 stripped
@@ -16202,6 +16222,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2527192377477463194}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2527192377477463196 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8380391512461054747, guid: bb73b99f4532a3e40983e1045d1cfe51,
+    type: 3}
+  m_PrefabInstance: {fileID: 2527192377477463194}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3284285329624295131
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16701,12 +16733,12 @@ PrefabInstance:
     - target: {fileID: 530672702275661573, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_FollowOffset.y
-      value: 6.238246
+      value: 6.347245
       objectReference: {fileID: 0}
     - target: {fileID: 530672702275661573, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_FollowOffset.z
-      value: -13.86119
+      value: -13.89295
       objectReference: {fileID: 0}
     - target: {fileID: 633823321340666291, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
@@ -16736,12 +16768,12 @@ PrefabInstance:
     - target: {fileID: 633823321340666291, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -3.5527137e-15
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 633823321340666291, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 8.881784e-16
+      value: 4.440892e-16
       objectReference: {fileID: 0}
     - target: {fileID: 1241479308258421621, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
@@ -16771,22 +16803,22 @@ PrefabInstance:
     - target: {fileID: 1241479308258421621, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000020978861
+      value: 0.000000019334228
       objectReference: {fileID: 0}
     - target: {fileID: 1241479308258421621, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000009096231
+      value: -0.000000008383134
       objectReference: {fileID: 0}
     - target: {fileID: 1322615870142887388, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_FollowOffset.y
-      value: 6.238246
+      value: 6.347245
       objectReference: {fileID: 0}
     - target: {fileID: 1322615870142887388, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_FollowOffset.z
-      value: -13.86119
+      value: -13.89295
       objectReference: {fileID: 0}
     - target: {fileID: 2053121977156543097, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
@@ -16816,22 +16848,22 @@ PrefabInstance:
     - target: {fileID: 2053121977156543097, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000013561577
+      value: 0.000000013561577
       objectReference: {fileID: 0}
     - target: {fileID: 2053121977156543097, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000061748144
+      value: -0.0000000061748144
       objectReference: {fileID: 0}
     - target: {fileID: 5761981633064258037, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_FollowOffset.y
-      value: 6.238246
+      value: 6.347245
       objectReference: {fileID: 0}
     - target: {fileID: 5761981633064258037, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_FollowOffset.z
-      value: -13.86119
+      value: -13.89295
       objectReference: {fileID: 0}
     - target: {fileID: 7807439977510585892, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
@@ -16886,12 +16918,12 @@ PrefabInstance:
     - target: {fileID: 7807439977510585918, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000014562416
+      value: 0.000000014562416
       objectReference: {fileID: 0}
     - target: {fileID: 7807439977510585918, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000031592258
+      value: -0.0000000031592258
       objectReference: {fileID: 0}
     - target: {fileID: 7807439977510585918, guid: 74e2ec9d720eaea4da0ac555dbc0b052,
         type: 3}

@@ -31,7 +31,7 @@ public class Character : MonoBehaviour
     [Tooltip("CUSTO DE MANA PARA O ATAQUE DE FOGO!")]
     [SerializeField] private byte manaCost;
     [SerializeField] private byte dashManaCost;
-
+    [SerializeField] private byte timeCost;
     [Header("Movimentação")]
     [Space(5)]
 
@@ -131,6 +131,7 @@ public class Character : MonoBehaviour
     private bool planando = false;
     private bool isDashing = false;
     public bool isUsingFireBreath { get; private set; } = false;
+    public bool isTimeSlow = false;
     private byte remainingJumps;
     private CharacterController character;
     [SerializeField]private Animator anim;
@@ -548,20 +549,54 @@ public class Character : MonoBehaviour
     }
     #endregion
     #region SlowTime
+
     private void ToggleSlowTime()
     {
+
         Debug.Log("Slow Time atual: " + (Time.timeScale));
-        if (Time.timeScale == 1.0f)
+        if (Time.timeScale == 1.0f && status.currentTimeSlow <= status.maxTime)
         {
+            isTimeSlow = true;
             Time.timeScale = slowTimeScale;
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             vignette.intensity.Override(0.4f);
+            StartCoroutine(IncrementarEnergia());
         }
         else
         {
+            isTimeSlow = false;
             Time.timeScale = 1.0f;
             Time.fixedDeltaTime = 0.02f;
             vignette.intensity.Override(0f);
+            StopCoroutine(IncrementarEnergia());
+        }
+    }
+
+    private IEnumerator IncrementarEnergia()
+    {
+        float timeGainPerSecond = timeCost * Time.deltaTime;
+        float accumulatedTimeGain = 0f;
+
+        while (isTimeSlow)
+        {
+            accumulatedTimeGain += timeGainPerSecond;
+
+            if (accumulatedTimeGain >= 1f)
+            {
+                int roundedTimeGain = Mathf.CeilToInt(accumulatedTimeGain);
+                if (status.currentTimeSlow + roundedTimeGain <= status.maxTime) 
+                {
+                    status.UseTime(roundedTimeGain);
+                    accumulatedTimeGain -= roundedTimeGain;
+                }
+                else
+                {
+                    isTimeSlow = false;
+                    vignette.intensity.Override(0f);
+                }
+            }
+
+            yield return null;
         }
     }
 

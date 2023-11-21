@@ -69,6 +69,13 @@ public class Status : MonoBehaviour
         }    
     }
 
+    public void UseTime(float amount)
+    {
+        currentTimeSlow += amount;
+        currentTimeSlow = Mathf.Clamp(currentTimeSlow, 0f, maxTime);    
+    }
+
+
     public void RechargeMana(float amount)
     {
         currentMana += amount;
