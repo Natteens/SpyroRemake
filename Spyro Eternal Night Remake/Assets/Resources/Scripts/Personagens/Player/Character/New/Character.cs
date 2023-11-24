@@ -341,6 +341,7 @@ public class Character : MonoBehaviour
 
         if (canMove && (character.isGrounded || remainingJumps > 0))
         {
+           
             isJumping = true;
             verticalVelocity = jumpHeight;
             remainingJumps--;
@@ -349,6 +350,8 @@ public class Character : MonoBehaviour
         {
             planando = true;
         }
+        anim.SetBool("idle", false);
+        anim.SetBool("movement", false);
     }
 
     private void OnJumpCanceled(InputAction.CallbackContext obj)
@@ -356,7 +359,6 @@ public class Character : MonoBehaviour
         if (planando)
         {
             planando = false;
-
         }
         jumpStartTime = 0;
     }
@@ -368,12 +370,17 @@ public class Character : MonoBehaviour
         if (elapsedJumpTime >= jumpDuration)
         {
             isJumping = false;
-
+            
+            anim.SetTrigger("Jump");
+            anim.SetBool("idle", false);
+            anim.SetBool("movement", false);
         }
         else
         {
+            anim.ResetTrigger("Jump");
             verticalVelocity = Mathf.Lerp(jumpHeight, 0f, elapsedJumpTime / jumpDuration);
         }
+
     }
 
     #endregion
@@ -561,6 +568,8 @@ public class Character : MonoBehaviour
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             vignette.intensity.Override(0.4f);
             StartCoroutine(IncrementarEnergia());
+            StopCoroutine(DecrementarEnergia());
+
         }
         else
         {
@@ -569,6 +578,7 @@ public class Character : MonoBehaviour
             Time.fixedDeltaTime = 0.02f;
             vignette.intensity.Override(0f);
             StopCoroutine(IncrementarEnergia());
+            StartCoroutine(DecrementarEnergia());
         }
     }
 
@@ -591,15 +601,42 @@ public class Character : MonoBehaviour
                 }
                 else
                 {
+                    
                     isTimeSlow = false;
                     vignette.intensity.Override(0f);
                 }
             }
-
             yield return null;
         }
     }
 
+    private IEnumerator DecrementarEnergia()
+    {
+        float timeGainPerSecond = timeCost * Time.deltaTime;
+        float accumulatedTimeGain = 0f;
+
+        while (!isTimeSlow)
+        {
+            accumulatedTimeGain += timeGainPerSecond;
+
+            if (accumulatedTimeGain >= 1f)
+            {
+                int roundedTimeGain = Mathf.CeilToInt(accumulatedTimeGain);
+                if (status.currentTimeSlow + roundedTimeGain <= status.maxTime)
+                {
+                    status.UseTimeDecrease(roundedTimeGain);
+                    accumulatedTimeGain -= roundedTimeGain;
+                }
+                else
+                {
+
+                    isTimeSlow = false;
+                    vignette.intensity.Override(0f);
+                }
+            }
+            yield return null;
+        }
+    }
     #endregion
 
     #region Damage

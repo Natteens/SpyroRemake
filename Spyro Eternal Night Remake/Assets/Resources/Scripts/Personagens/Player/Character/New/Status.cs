@@ -28,6 +28,7 @@ public class Status : MonoBehaviour
     public Slider furySlider;
     public Slider timeSlider;
     public Character p;
+    
 
     private void Start()
     {
@@ -75,6 +76,11 @@ public class Status : MonoBehaviour
         currentTimeSlow = Mathf.Clamp(currentTimeSlow, 0f, maxTime);    
     }
 
+    public void UseTimeDecrease(float amount)
+    {
+        currentTimeSlow -= amount;
+        currentTimeSlow = Mathf.Clamp(currentTimeSlow, 0f, maxTime);
+    }
 
     public void RechargeMana(float amount)
     {
@@ -123,6 +129,7 @@ public class Status : MonoBehaviour
         Debug.Log("Morreu!");
         p.ISDEAD = true;
         p.canAttack = false;
+
 
         Invoke("RestartScene", 3.0f);
     }
