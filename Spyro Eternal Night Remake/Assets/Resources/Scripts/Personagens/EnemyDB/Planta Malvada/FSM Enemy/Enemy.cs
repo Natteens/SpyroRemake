@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     private EnemyData enemyData;
     #endregion
 
-    public Animator Anim { get; set; }
+    public Animator Anim;
     public Rigidbody RB { get; private set; }
 
     public Transform Target;
@@ -30,13 +30,12 @@ public class Enemy : MonoBehaviour
     {
         StateMachine = new EnemyStateMachine();
         IdleState = new EnemyIdleState(this, StateMachine, enemyData, "idle");
-        ChaseState = new EnemyChaseState(this, StateMachine, enemyData, "chase");
+      //  ChaseState = new EnemyChaseState(this, StateMachine, enemyData, "chase");
         AttackState = new EnemyAttackState(this, StateMachine, enemyData, "attack");
     }
 
     private void Start()
-    {
-        Anim = GetComponent<Animator>();
+    {     
         RB = GetComponent<Rigidbody>();
         StateMachine.Initialize(IdleState);
     }

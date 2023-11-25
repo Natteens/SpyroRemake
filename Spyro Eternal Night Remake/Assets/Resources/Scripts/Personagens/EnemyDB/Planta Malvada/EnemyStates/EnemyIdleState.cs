@@ -14,7 +14,7 @@ public class EnemyIdleState : EnemyState
     {
         base.Enter();
         enemy.SetVelocity(Vector3.zero);
-        playerTransform = null; // Reinicialize o transform do jogador ao entrar no estado idle
+        
     }
 
     public override void LogicUpdate()
@@ -35,14 +35,8 @@ public class EnemyIdleState : EnemyState
             }
 
             if (playerTransform != null)
-            {
-                // Verifique se há obstruções entre o inimigo e o jogador
-                Vector3 directionToPlayer = playerTransform.position - enemy.transform.position;
-
-                if (!Physics.Raycast(enemy.transform.position, directionToPlayer.normalized, directionToPlayer.magnitude, enemyData.whatIsPlayer))
-                {
-                    stateMachine.ChangeState(enemy.ChaseState);
-                }
+            {   
+              stateMachine.ChangeState(enemy.AttackState);    
             }
 
             Debug.Log("Idle");
