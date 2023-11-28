@@ -817,7 +817,7 @@ MonoBehaviour:
     m_ActionName: Player/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: ed2b4c07-ba92-4864-9f71-4ea1c4eeb9a5
+    m_ActionId: f7f86794-9cd8-44de-9146-f0564c3303f7
     m_ActionName: Player/Look[/Mouse/delta]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 

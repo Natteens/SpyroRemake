@@ -228,6 +228,10 @@ public class Character : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            anim.SetTrigger("desmaio");
+        }
     }
 
     #region metodos
