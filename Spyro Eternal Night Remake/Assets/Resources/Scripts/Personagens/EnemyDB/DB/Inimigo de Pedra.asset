@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: Inimigo de Pedra
   m_EditorClassIdentifier: 
   vidaMax: 100
-  speed: 3
+  speed: 5
   Attack: 10
-  attackRange: 3
-  raySpacing: 1
+  viewAngle: 290
+  rayHeight: 1.3
+  viewDistance: 10
+  rayCount: 80
+  attackRange: 5
   rayCheck: 3
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
-  DetectRay: 5
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64

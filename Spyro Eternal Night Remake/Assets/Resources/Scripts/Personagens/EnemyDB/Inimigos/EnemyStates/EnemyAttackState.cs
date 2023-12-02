@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyAttackState : EnemyState
 {
-    public bool atacando = false;
 
     public EnemyAttackState(Enemy enemy, EnemyStateMachine stateMachine, EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
@@ -15,23 +14,33 @@ public class EnemyAttackState : EnemyState
     {
         base.LogicUpdate();
 
-        var pS = enemy.Target.GetComponent<Status>();
-
-        if (enemy.GiveDamage && !atacando)
+        if (!isExitingState)
         {
-            atacando = true;
-            pS.TakeDamage(enemyData.Attack);
-            Debug.Log("Ataquei");
-            stateMachine.ChangeState(enemy.IdleState);
-        }
-       else
-        {
-            stateMachine.ChangeState(enemy.IdleState);
-        }
-        
+            if (enemy.Target != null)
+            {
+                float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
 
+                if (distanceToTarget > enemyData.attackRange)
+                {
+                    stateMachine.ChangeState(enemy.ChaseState);
+                }
+                else if (enemy.CanAttack())
+                {                   
+                    stateMachine.ChangeState(enemy.AttackState);
+                    enemy.attackCooldownTimer = enemy.attackCooldown;
+                }
+            }
+            else
+            {
+                stateMachine.ChangeState(enemy.IdleState);
+            }
+        }
     }
 
-    
-   
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+
+        enemy.timerCooldown();
+    }
 }

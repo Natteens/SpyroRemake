@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Status : MonoBehaviour
+public class Status : MonoBehaviour, Damage
 {
     [HideInInspector]
     public float maxHealth = 100f;

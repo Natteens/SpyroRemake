@@ -1,6 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.VFX;
 
 public class EnemyDeadState : EnemyState
 {
@@ -8,28 +12,30 @@ public class EnemyDeadState : EnemyState
     {
     }
 
-    public override void DoChecks()
-    {
-        base.DoChecks();
-    }
-
     public override void Enter()
     {
         base.Enter();
-    }
 
-    public override void Exit()
-    {
-        base.Exit();
+        enemy.RB.mass = 10;
+        enemy.RB.isKinematic = true;
+
+        enemy.isDead = true;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
+        if (enemy.isDead)
+        {
+            ISDEAD();
+        }
     }
 
-    public override void PhysicsUpdate()
+
+    public void ISDEAD()
     {
-        base.PhysicsUpdate();
+        enemy.VFX[1].Play();
     }
 }
+

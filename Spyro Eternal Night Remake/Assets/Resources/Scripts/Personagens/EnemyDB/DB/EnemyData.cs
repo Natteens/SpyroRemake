@@ -12,15 +12,23 @@ public class EnemyData : ScriptableObject
 
     public short Attack;
 
-    public short attackRange;
+    [Header("Visao")]
 
-    public byte raySpacing;
+    public float viewAngle = 60f;
+
+    public float rayHeight = 1.5f;
+
+    public float viewDistance = 5f;
+
+    public int rayCount = 5;
+
+    public short attackRange;
 
     public byte rayCheck;
 
     public LayerMask groundLayer;
+    
 
-    public short DetectRay;
     public LayerMask whatIsPlayer;
 
     public bool PodeAndar = false;

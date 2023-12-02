@@ -98,8 +98,7 @@ public class Character : MonoBehaviour
     [SerializeField] private VisualEffect[] VFX;
     [SerializeField] private GameObject[] damageColliders;
     [SerializeField] private LayerMask Target;
-    [SerializeField] private List<Cristais> cristaisColididos = new List<Cristais>();
-
+   
     private ComboState comboState = ComboState.None;
     private bool isAttacking = false;
     private bool isUsingFuryAttack = false;
@@ -231,6 +230,7 @@ public class Character : MonoBehaviour
         else
         {
             anim.SetTrigger("desmaio");
+           
         }
     }
 
@@ -658,25 +658,18 @@ public class Character : MonoBehaviour
 
                     foreach (Collider hitCollider in hitColliders)
                     {
+                        Damage damageable = hitCollider.GetComponent<Damage>();
 
-                        if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Cristal"))
+                        if (damageable != null)
                         {
-                            Cristais cristal = hitCollider.gameObject.GetComponent<Cristais>();
-
-                            if (cristal != null && !cristaisColididos.Contains(cristal))
-                            {
-                                cristal.TakeDamage(dano);
-                                cristaisColididos.Add(cristal);
-                            }
+                            damageable.TakeDamage(dano);
                         }
                     }
                 }
             }
         }
-
-
-        cristaisColididos.Clear();
     }
+
 
 
     #endregion

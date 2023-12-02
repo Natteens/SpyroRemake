@@ -15,13 +15,16 @@ MonoBehaviour:
   vidaMax: 100
   speed: 5
   Attack: 5
-  attackRange: 0
-  raySpacing: 3
+  viewAngle: 90
+  rayHeight: 1
+  viewDistance: 5
+  rayCount: 60
+  attackRange: 5
   rayCheck: 3
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
-  DetectRay: 10
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
+  PodeAndar: 0

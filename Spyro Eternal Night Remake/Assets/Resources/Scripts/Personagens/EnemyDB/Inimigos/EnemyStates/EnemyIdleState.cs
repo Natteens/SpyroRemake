@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyIdleState : EnemyState
 {
-    private Transform playerTransform;
+    public float detectionRange = 5f; // Ajuste conforme necessário
 
     public EnemyIdleState(Enemy enemy, EnemyStateMachine stateMachine, EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
@@ -14,25 +14,23 @@ public class EnemyIdleState : EnemyState
     {
         base.Enter();
         enemy.SetVelocity(Vector3.zero);
-        
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
         if (!isExitingState)
         {
-           
-            if (playerTransform != null && !enemyData.PodeAndar)
-            {   
-              stateMachine.ChangeState(enemy.AttackState);    
-            }
-            else if (playerTransform != null && enemyData.PodeAndar)
+            if (enemy.Target != null)
             {
-              stateMachine.ChangeState(enemy.ChaseState);
+                float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
+
+                if (distanceToTarget <= detectionRange)
+                {
+                    stateMachine.ChangeState(enemy.ChaseState);
+                }
             }
         }
     }
 }
-
-

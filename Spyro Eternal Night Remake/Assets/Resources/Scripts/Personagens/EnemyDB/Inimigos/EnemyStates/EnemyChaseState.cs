@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyChaseState : EnemyState
 {
+    private float rotationSpeed = 5f;
 
     public EnemyChaseState(Enemy enemy, EnemyStateMachine stateMachine, EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
@@ -12,7 +13,6 @@ public class EnemyChaseState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        
     }
 
     public override void LogicUpdate()
@@ -24,15 +24,21 @@ public class EnemyChaseState : EnemyState
             if (enemy.Target != null)
             {
                 float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
+                RotateTowardsPlayer();
 
-                if (distanceToTarget > enemyData.attackRange)
+                if (distanceToTarget <= enemyData.attackRange)
+                {
+                    stateMachine.ChangeState(enemy.AttackState);
+                    Debug.Log("Atacando");
+                }
+                else if(enemyData.PodeAndar)
                 {
                     ChasePlayer();
                 }
                 else
                 {
-                    stateMachine.ChangeState(enemy.AttackState);
-                    Debug.Log("Atacando");
+                    
+                    stateMachine.ChangeState(enemy.IdleState);
                 }
             }
             else
@@ -44,9 +50,18 @@ public class EnemyChaseState : EnemyState
 
     private void ChasePlayer()
     {
+        RotateTowardsPlayer();
+
         Vector3 direction = Vector3.Normalize(enemy.Target.position - enemy.transform.position);
         Vector3 velocity = direction * enemyData.speed;
+
         enemy.SetVelocity(velocity);
     }
 
+    private void RotateTowardsPlayer()
+    {
+        Vector3 direction = Vector3.Normalize(enemy.Target.position - enemy.transform.position);
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
 }
