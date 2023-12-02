@@ -57,11 +57,6 @@ public class EnemyState
 
     public virtual void AnimationFinishTrigger() => isAnimationFinished = true;
 
-   
-    public void SetTarget(Transform target)
-    {
-        enemy.Target = target;
-    }
 
 }
 

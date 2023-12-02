@@ -23,5 +23,6 @@ public class EnemyData : ScriptableObject
     public short DetectRay;
     public LayerMask whatIsPlayer;
 
-
+    public bool PodeAndar = false;
+    
 }

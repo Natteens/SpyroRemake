@@ -12,7 +12,7 @@ public class EnemyChaseState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        SetPlayerAsTarget();
+        
     }
 
     public override void LogicUpdate()
@@ -49,12 +49,4 @@ public class EnemyChaseState : EnemyState
         enemy.SetVelocity(velocity);
     }
 
-    private void SetPlayerAsTarget()
-    {
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if (playerObject != null)
-        {
-            enemy.IdleState.SetTarget(playerObject.transform);
-        }
-    }
 }

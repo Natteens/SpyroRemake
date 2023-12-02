@@ -22,24 +22,15 @@ public class EnemyIdleState : EnemyState
         base.LogicUpdate();
         if (!isExitingState)
         {
-            // Verifique se o jogador está dentro do raio de detecção
-            Collider[] colliders = Physics.OverlapSphere(enemy.transform.position, enemyData.DetectRay, enemyData.whatIsPlayer);
-
-            foreach (Collider collider in colliders)
-            {
-                if (collider.CompareTag("Player"))
-                {
-                    playerTransform = collider.transform; // Armazene a referência ao transform do jogador
-                    break;
-                }
-            }
-
-            if (playerTransform != null)
+           
+            if (playerTransform != null && !enemyData.PodeAndar)
             {   
               stateMachine.ChangeState(enemy.AttackState);    
             }
-
-            Debug.Log("Idle");
+            else if (playerTransform != null && enemyData.PodeAndar)
+            {
+              stateMachine.ChangeState(enemy.ChaseState);
+            }
         }
     }
 }

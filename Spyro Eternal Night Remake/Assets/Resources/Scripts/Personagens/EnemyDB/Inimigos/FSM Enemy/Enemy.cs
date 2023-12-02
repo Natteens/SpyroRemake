@@ -11,6 +11,9 @@ public class Enemy : MonoBehaviour
     public EnemyIdleState IdleState { get; private set; }
     public EnemyChaseState ChaseState { get; private set; }
     public EnemyAttackState AttackState { get; private set; }
+    public EnemyDeadState DeadState { get; private set; }
+    public EnemyHurtState HurtState { get; private set; }
+    public EnemyJumpState JumpState { get; private set; }
 
 
     [SerializeField]
@@ -21,17 +24,33 @@ public class Enemy : MonoBehaviour
     public Rigidbody RB { get; private set; }
 
     public Transform Target;
+    public BoxCollider atk;
 
     #region Other Variables         
     public Vector3 CurrentVelocity { get; private set; }
     private Vector3 workspace;
+
+    public bool FindPlayer = false;
+    public bool GiveDamage = false;
+
+
+
+    [SerializeField]
+    private int rayCount = 5; // Número de raycasts
+    [SerializeField]
+    private float viewDistance = 5f; // Distância de visão
+    [SerializeField]
+    private float viewAngle = 60f; // Ângulo de visão
+
     #endregion
     private void Awake()
     {
         StateMachine = new EnemyStateMachine();
         IdleState = new EnemyIdleState(this, StateMachine, enemyData, "idle");
-      //  ChaseState = new EnemyChaseState(this, StateMachine, enemyData, "chase");
-        AttackState = new EnemyAttackState(this, StateMachine, enemyData, "attack");
+        ChaseState = new EnemyChaseState(this, StateMachine, enemyData, "walk");
+        AttackState = new EnemyAttackState(this, StateMachine, enemyData, "atk");
+        DeadState = new EnemyDeadState(this, StateMachine, enemyData, "desmaio");
+        JumpState = new EnemyJumpState(this, StateMachine, enemyData, "pulo");
     }
 
     private void Start()
@@ -49,6 +68,8 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         StateMachine.CurrentState.PhysicsUpdate();
+
+        CheckPlayerInSight();
     }
 
     public void SetVelocity(Vector3 velocity)
@@ -85,4 +106,37 @@ public class Enemy : MonoBehaviour
 
         return groundDetected;
     }
+
+
+
+    private void CheckPlayerInSight()
+    {
+        float halfViewAngle = viewAngle / 2f;
+        Vector3 forward = transform.forward;
+
+        for (int i = 0; i < rayCount; i++)
+        {
+            float currentAngle = -halfViewAngle + (i / (float)(rayCount - 1)) * viewAngle;
+
+            Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
+            Ray ray = new Ray(transform.position, direction);
+
+            Debug.DrawRay(ray.origin, ray.direction * viewDistance, Color.yellow);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, viewDistance))
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    FindPlayer = true;
+                    Target = hit.transform;
+                    GiveDamage = true;
+                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
+                    break;
+                }
+            }
+        }
+    }
+
+
+
 }
