@@ -20,9 +20,9 @@ public class Character : MonoBehaviour
     private InputAction furyAttack;
     #endregion
 
-    #region Configurações
+    #region Configuraï¿½ï¿½es
     // ------------------------------------------------------\\ 
-    [Header("Configurações do Jogador")]
+    [Header("Configuraï¿½ï¿½es do Jogador")]
     [Space(10)]
 
 
@@ -32,7 +32,7 @@ public class Character : MonoBehaviour
     [SerializeField] private byte manaCost;
     [SerializeField] private byte dashManaCost;
     [SerializeField] private byte timeCost;
-    [Header("Movimentação")]
+    [Header("Movimentaï¿½ï¿½o")]
     [Space(5)]
 
     [Range(0, 100)]
@@ -67,7 +67,7 @@ public class Character : MonoBehaviour
     private float lastDashTime;
     // ------------------------------------------------------\\ 
 
-    [Header("Vôo")]
+    [Header("Vï¿½o")]
     [Space(5)]
 
     [Range(0, 100)]
@@ -75,7 +75,7 @@ public class Character : MonoBehaviour
 
     // ------------------------------------------------------\\ 
 
-    [Header("Manipulação do Tempo")]
+    [Header("Manipulaï¿½ï¿½o do Tempo")]
     [Space(5)]
 
     [Range(0, 100)]
@@ -99,11 +99,10 @@ public class Character : MonoBehaviour
     [SerializeField] private GameObject[] damageColliders;
     [SerializeField] private LayerMask Target;
    
-    private ComboState comboState = ComboState.None;
-    private bool isAttacking = false;
+    [SerializeField]private ComboState comboState = ComboState.None;
+    public bool isAttacking = false;
     private bool isUsingFuryAttack = false;
     private int currentVFXIndex;
-   
     private enum ComboState
     {
         None,
@@ -112,7 +111,7 @@ public class Character : MonoBehaviour
         ThirdAttack
     }
    // ------------------------------------------------------\\ 
-    [Header("Configurações Adicionais")]
+    [Header("Configuraï¿½ï¿½es Adicionais")]
     [Space(10)]
 
     [SerializeField] private float gravity = -9.81f;
@@ -195,16 +194,21 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!ISDEAD)
+        Gravity();
+
+        if (ISDEAD)
         {
-            if (isDashing)
+            HandleDeath();
+            return;
+        }
+
+        if (isDashing)
                 return;
 
             Movement();
             if (isJumping)
                 HandleJump();
-
-            Gravity();
+    
             if (comboState != ComboState.None)
             {
                 comboTimer += Time.deltaTime;
@@ -212,10 +216,8 @@ public class Character : MonoBehaviour
                 if (comboTimer >= 2)
                 {
                     comboState = ComboState.None;
-                    Debug.Log("Combo Reset!");
                 }
             }
-
 
             if (isUsingFuryAttack)
             {
@@ -226,12 +228,8 @@ public class Character : MonoBehaviour
                     objVFX.rotation = Quaternion.LookRotation(-oppositeDirection);
                 }
             }
-        }
-        else
-        {
-            anim.SetTrigger("desmaio");
-           
-        }
+        
+        
     }
 
     #region metodos
@@ -309,15 +307,7 @@ public class Character : MonoBehaviour
                 isDashing = true;
                 lastDashTime = Time.time;
                 StartCoroutine(DashCooldown());
-            }
-            else
-            {
-                Debug.Log("Dash ainda está em cooldown!");
-            }
-        }
-        else
-        {
-            Debug.Log("Sem mana suficiente para o dash!");
+            }         
         }
     }
 
@@ -327,7 +317,6 @@ public class Character : MonoBehaviour
 
         while (Time.time < startTime + dashDuration)
         {
-            // Aplicar a velocidade do dash na direção do dash
             float dashSpeed = dashForce * Time.deltaTime;
             character.Move(dashDirection * dashSpeed);
 
@@ -344,8 +333,7 @@ public class Character : MonoBehaviour
         jumpStartTime = Time.time;
 
         if (canMove && (character.isGrounded || remainingJumps > 0))
-        {
-           
+        {          
             isJumping = true;
             verticalVelocity = jumpHeight;
             remainingJumps--;
@@ -451,85 +439,75 @@ public class Character : MonoBehaviour
 
     #endregion
     #region Attack
-    private void Attack()
+
+    public void Attack()
     {
-        if (canAttack)
+        if (!isUsingFireBreath && !isAttacking)
         {
-            if (!isUsingFireBreath && !isAttacking)
+            isAttacking = true;
+
+            switch (comboState)
             {
-                switch (comboState)
-                {
-                    case ComboState.None:
-                        comboState = ComboState.FirstAttack;
-                        Debug.Log("Ataque #1");
-                        VFX[1].Play();
-                        dano = 10;
-                        currentVFXIndex = 1;
-                        damageColliders[1].SetActive(true);
-                        comboTimer = 0;
-
-                        // anim
-                        anim.SetTrigger("attack1");
-                        break;
-                    case ComboState.FirstAttack:
-                        comboState = ComboState.SecondAttack;
-                        Debug.Log("Ataque #2");
-                        VFX[2].Play();
-                        dano = 20;
-                        currentVFXIndex = 2;
-                        damageColliders[2].SetActive(true);
-                        comboTimer = 0;
-
-                        // anim
-                        anim.SetTrigger("attack2");
-                        break;
-                    case ComboState.SecondAttack:
-                        comboState = ComboState.ThirdAttack;
-                        Debug.Log("Ataque #3");
-                        VFX[3].Play();
-                        dano = 30;
-                        currentVFXIndex = 3;
-                        damageColliders[3].SetActive(true);
-                        comboTimer = 0;
-
-                        anim.SetTrigger("attack3");
-                        break;
-                    case ComboState.ThirdAttack:
-                        comboState = ComboState.None;
-                        Debug.Log("Combo Reset!");
-
-                        anim.ResetTrigger("attack1");
-                        anim.ResetTrigger("attack2");
-                        anim.ResetTrigger("attack3");
-                        break;
-                }
-                CheckCollisions();
-                StartCoroutine(WaitForVFXToEnd(vfxDuration));
-                canAttack = false;
-                StartCoroutine(AttackCooldown());
+                case ComboState.None:
+                    StartCombo(10, "attack1");
+                    break;
+                case ComboState.FirstAttack:
+                    StartCombo(20, "attack2");
+                    break;
+                case ComboState.SecondAttack:
+                    StartCombo(30, "attack3");
+                    break;
+                case ComboState.ThirdAttack:
+                    ResetCombo();        
+                    break;
             }
-        }
-        else
-        {
-            isAttacking = false;
-            
+
+            CheckCollisions();
+            StartCoroutine(AttackCooldown());
         }
     }
+
+    private void StartCombo(short damage, string trigger)
+    {
+        comboState++;
+        dano = damage;
+        comboTimer = 0;
+        anim.SetTrigger(trigger);
+    }
+
+    private void ResetCombo()
+    {
+        comboState = ComboState.None;
+
+        anim.ResetTrigger("attack1");
+        anim.ResetTrigger("attack2");
+        anim.ResetTrigger("attack3");
+
+        isAttacking = false;
+    }
+
+    public void OnAttackAnimationEnd()
+    {
+        isAttacking = false;
+        // Reinicie o combo aqui, se desejar permitir combos consecutivos.
+        // ResetCombo();
+    }
+
     private IEnumerator AttackCooldown()
     {
-        yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
+        yield return new WaitUntil(() => !IsAttackAnimationPlaying());
+        // Reinicie o combo aqui, se desejar permitir combos consecutivos.
+        // ResetCombo();
     }
-    private IEnumerator WaitForVFXToEnd(float duration)
+
+    private bool IsAttackAnimationPlaying()
     {
-        yield return new WaitForSeconds(duration);
-        damageColliders[currentVFXIndex].SetActive(false);
-        VFX[1].Stop();
-        VFX[2].Stop();
-        VFX[3].Stop();
+        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        return stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2") || stateInfo.IsName("Attack3");
     }
 
     #endregion
+
     #region FuryAttack
     private void FuryAttack()
     {
@@ -695,7 +673,17 @@ public class Character : MonoBehaviour
             jumpStartTime = 0;
         }
     }
-    #endregion 
+    #endregion
+
+    private void HandleDeath()
+    {
+        
+        playerActionsAsset.Disable();
+        anim.SetBool("idle", false);
+        anim.SetBool("movement", false);
+        anim.SetBool("fireBreath", false);
+        anim.SetTrigger("desmaio");
+    }
 
     #endregion
 

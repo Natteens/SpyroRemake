@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
 
 public class Enemy : MonoBehaviour, Damage
@@ -14,6 +11,7 @@ public class Enemy : MonoBehaviour, Damage
     public EnemyIdleState IdleState { get; private set; }
     public EnemyChaseState ChaseState { get; private set; }
     public EnemyAttackState AttackState { get; private set; }
+    public EnemySPAttackState SuperAttackState { get; private set; }
     public EnemyDeadState DeadState { get; private set; }
     public EnemyHurtState HurtState { get; private set; }
     public EnemyJumpState JumpState { get; private set; }
@@ -44,10 +42,7 @@ public class Enemy : MonoBehaviour, Damage
     public float maxHealth = 100f;
     public float currentHealth;
     //ATK
-    public bool hasAttacked = false;
-    public float attackTimer = 0f;
-    public float attackCooldown = 1f;
-    public float attackCooldownTimer = 0f;
+    public bool podeATK = true;
     #endregion
 
     #endregion
@@ -60,15 +55,21 @@ public class Enemy : MonoBehaviour, Damage
         AttackState = new EnemyAttackState(this, StateMachine, enemyData, "atk");
         DeadState = new EnemyDeadState(this, StateMachine, enemyData, "desmaio");
         JumpState = new EnemyJumpState(this, StateMachine, enemyData, "pulo");
+        if (enemyData.PodeAndar)
+        {
+            SuperAttackState = new EnemySPAttackState(this, StateMachine, enemyData, "sAtk");
+           // Debug.Log(gameObject.name + "TENHO SUPER ATK");
+        }
     }
 
     private void Start()
-    {     
+    {
         RB = GetComponent<Rigidbody>();
         StateMachine.Initialize(IdleState);
 
         currentHealth = maxHealth;
         isDead = false;
+
     }
 
     private void Update()
@@ -99,10 +100,10 @@ public class Enemy : MonoBehaviour, Damage
 
     private void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
 
-    private void CheckPlayer()
+    public void CheckPlayer()
     {
         float halfViewAngle = enemyData.viewAngle / 2f;
-        Vector3 forward = transform.forward;     
+        Vector3 forward = transform.forward;
 
         for (int i = 0; i < enemyData.rayCount; i++)
         {
@@ -125,7 +126,7 @@ public class Enemy : MonoBehaviour, Damage
                     Target = hit.transform;
                     GiveDamage = true;
                     Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                    break; 
+                    break;
                 }
                 else
                 {
@@ -160,31 +161,18 @@ public class Enemy : MonoBehaviour, Damage
         StateMachine.ChangeState(DeadState);
     }
 
-    public bool CanAttack()
-    {
-        return attackCooldownTimer <= 0f;
-    }
-
-    public void timerCooldown()
-    {
-        if (attackCooldownTimer > 0f)
-        {
-            attackCooldownTimer -= Time.deltaTime;
-           
-        }
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        
+
         if (other.CompareTag("Player"))
         {
-          var pS = other.GetComponent<Status>();
-          if (pS != null)
-          {
-              pS.TakeDamage(enemyData.Attack);
-              Debug.Log("Ataque ao jogador");
-          }       
+            var pS = other.GetComponent<Status>();
+            if (pS != null)
+            {
+                pS.TakeDamage(enemyData.Attack);
+                Debug.Log("Ataque ao jogador");
+            }
         }
     }
 

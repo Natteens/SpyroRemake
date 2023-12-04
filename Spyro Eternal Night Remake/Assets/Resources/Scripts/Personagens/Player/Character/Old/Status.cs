@@ -129,9 +129,10 @@ public class Status : MonoBehaviour, Damage
         Debug.Log("Morreu!");
         p.ISDEAD = true;
         p.canAttack = false;
+        p.canMove = false;
+        p.isAttacking = true;
 
-
-        Invoke("RestartScene", 3.0f);
+       // Invoke("RestartScene", 3.0f);
     }
 
 

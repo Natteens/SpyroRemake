@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EnemyIdleState : EnemyState
 {
-    public float detectionRange = 5f; // Ajuste conforme necessário
+    private float atkCD = 1.5f;
+
+    private bool useSuperAtk;
 
     public EnemyIdleState(Enemy enemy, EnemyStateMachine stateMachine, EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
@@ -14,23 +16,44 @@ public class EnemyIdleState : EnemyState
     {
         base.Enter();
         enemy.SetVelocity(Vector3.zero);
+        enemy.StartCoroutine(resetCD());
+        useSuperAtk = Random.Range(0, 2) == 0;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        if (!isExitingState)
+        if (!isExitingState && enemy.Target != null)
         {
-            if (enemy.Target != null)
+            float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
+            if (distanceToTarget > enemyData.attackRange)
             {
-                float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
-
-                if (distanceToTarget <= detectionRange)
+                stateMachine.ChangeState(enemy.ChaseState);
+            }
+            else if (distanceToTarget <= enemyData.attackRange && enemy.podeATK)
+            {
+                if (enemyData.PodeAndar)
                 {
-                    stateMachine.ChangeState(enemy.ChaseState);
+                    if (useSuperAtk)
+                    {
+                        stateMachine.ChangeState(enemy.SuperAttackState);
+                    }
+                    else
+                    {
+                        stateMachine.ChangeState(enemy.AttackState);
+                    }
+                }
+                else
+                {
+                    stateMachine.ChangeState(enemy.AttackState);
                 }
             }
         }
+    }
+
+    private IEnumerator resetCD()
+    {
+        yield return new WaitForSeconds(atkCD);
+        enemy.podeATK = true;
     }
 }

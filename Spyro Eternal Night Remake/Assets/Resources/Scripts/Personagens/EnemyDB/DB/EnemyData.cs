@@ -14,6 +14,8 @@ public class EnemyData : ScriptableObject
 
     [Header("Visao")]
 
+    public float rotationSpeed = 5f;
+
     public float viewAngle = 60f;
 
     public float rayHeight = 1.5f;

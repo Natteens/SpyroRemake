@@ -1,13 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAttackState : EnemyState
+public class EnemySPAttackState : EnemyState
 {
-    private float attackCooldown = 1.5f;
+    private float attackCooldown = 2f;
 
-    public EnemyAttackState(Enemy enemy, EnemyStateMachine stateMachine, EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
+    public EnemySPAttackState(Enemy enemy, EnemyStateMachine stateMachine, EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
-
     }
 
     public override void Enter()
@@ -28,7 +28,7 @@ public class EnemyAttackState : EnemyState
 
                 if (distanceToTarget <= enemyData.attackRange)
                 {
-                    stateMachine.ChangeState(enemy.AttackState);
+                    stateMachine.ChangeState(enemy.SuperAttackState);
                     enemy.StartCoroutine(CD());
                 }
                 else if (distanceToTarget > enemyData.attackRange)

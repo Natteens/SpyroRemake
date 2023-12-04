@@ -8,8 +8,6 @@ using UnityEngine.VFX;
 
 public class GameManager : MonoBehaviour
 {
-
-
     private void OnApplicationFocus(bool focus)
     {
         if (focus)
@@ -21,5 +19,4 @@ public class GameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
     }
-
 }

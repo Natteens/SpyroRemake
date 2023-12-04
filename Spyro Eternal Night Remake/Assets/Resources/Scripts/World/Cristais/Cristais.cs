@@ -9,11 +9,11 @@ public enum CristalType
     Fury
 }
 
-public class Cristais : MonoBehaviour
+public class Cristais : MonoBehaviour, Damage
 {
     public CristalType Type;
-    public short maxHealth = 150;
-    public short currentHealth;
+    public float maxHealth = 150;
+    public float currentHealth;
 
     public GameObject HealthDropPrefab;
     public GameObject ManaDropPrefab;   
@@ -30,7 +30,7 @@ public class Cristais : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(short damage)
+    public void TakeDamage(float damage)
     {
         currentHealth -= damage;
 

@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Planta
   m_EditorClassIdentifier: 
   vidaMax: 100
-  speed: 5
-  Attack: 5
-  viewAngle: 90
+  speed: 1
+  Attack: 10
+  rotationSpeed: 5
+  viewAngle: 360
   rayHeight: 1
-  viewDistance: 5
+  viewDistance: 10
   rayCount: 60
-  attackRange: 5
+  attackRange: 3
   rayCheck: 3
   groundLayer:
     serializedVersion: 2
