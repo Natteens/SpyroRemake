@@ -35,11 +35,17 @@ public class Enemy : MonoBehaviour, Damage
     public bool GiveDamage = false;
     public bool isDead = false;
 
-    public VisualEffect[] VFX;
+    public VisualEffect VFX;
+
+    public SkinnedMeshRenderer skMesh;
+    private Material skMaterial;
+
+    public float dissolveRate = 0.0125f;
+    public float refreshRate = 0.025f;
 
     #region Vida
     //VIDA
-    public float maxHealth = 100f;
+    public float maxHealth;
     public float currentHealth;
     //ATK
     public bool podeATK = true;
@@ -53,7 +59,7 @@ public class Enemy : MonoBehaviour, Damage
         IdleState = new EnemyIdleState(this, StateMachine, enemyData, "idle");
         ChaseState = new EnemyChaseState(this, StateMachine, enemyData, "walk");
         AttackState = new EnemyAttackState(this, StateMachine, enemyData, "atk");
-        DeadState = new EnemyDeadState(this, StateMachine, enemyData, "desmaio");
+        DeadState = new EnemyDeadState(this, StateMachine, enemyData, "dead");
         JumpState = new EnemyJumpState(this, StateMachine, enemyData, "pulo");
         if (enemyData.PodeAndar)
         {
@@ -67,6 +73,8 @@ public class Enemy : MonoBehaviour, Damage
         RB = GetComponent<Rigidbody>();
         StateMachine.Initialize(IdleState);
 
+        skMaterial = skMesh.material;
+        maxHealth = enemyData.vidaMax;
         currentHealth = maxHealth;
         isDead = false;
 
@@ -74,20 +82,24 @@ public class Enemy : MonoBehaviour, Damage
 
     private void Update()
     {
-        if (!isDead)
+        CurrentVelocity = RB.velocity;
+        StateMachine.CurrentState.LogicUpdate();
+
+        if (transform.position.y <= -30)
         {
-            CurrentVelocity = RB.velocity;
-            StateMachine.CurrentState.LogicUpdate();
+            Destruido();
         }
+        
     }
 
     private void FixedUpdate()
     {
+        StateMachine.CurrentState.PhysicsUpdate();       
         if (!isDead)
         {
-            StateMachine.CurrentState.PhysicsUpdate();
             CheckPlayer();
         }
+
     }
 
     public void SetVelocity(Vector3 velocity)
@@ -152,13 +164,25 @@ public class Enemy : MonoBehaviour, Damage
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
-            Die();
+            StateMachine.ChangeState(DeadState);
         }
     }
 
-    private void Die()
+    public void Destruido()
     {
-        StateMachine.ChangeState(DeadState);
+        Destroy(gameObject);
+    }
+
+    public IEnumerator DissolveCo()
+    {
+        float counter = 0;
+
+        while (skMaterial.GetFloat("_DissolveAmount") < 1)
+        {
+            counter += dissolveRate;
+            skMaterial.SetFloat("_DissolveAmount", counter);
+        }
+        yield return new WaitForSeconds(refreshRate);
     }
 
 

@@ -33,7 +33,8 @@ public class Status : MonoBehaviour, Damage
     private void Start()
     {
         currentHealth = maxHealth;
-        currentMana = maxMana;
+       // currentMana = maxMana;
+        currentMana = 0f;
         currentFuryEnergy = 0f;
         currentTimeSlow = 0f;
     }
@@ -110,7 +111,7 @@ public class Status : MonoBehaviour, Damage
         }
         else
         {
-            Debug.Log("Energia de fúria insuficiente!");
+            Debug.Log("Energia de fï¿½ria insuficiente!");
         }
     }
 
@@ -124,6 +125,10 @@ public class Status : MonoBehaviour, Damage
         }
     }
 
+    public void CallDie()
+    {
+        Die();
+    }
     private void Die()
     {
         Debug.Log("Morreu!");
@@ -132,7 +137,7 @@ public class Status : MonoBehaviour, Damage
         p.canMove = false;
         p.isAttacking = true;
 
-       // Invoke("RestartScene", 3.0f);
+        Invoke("RestartScene", 3.0f);
     }
 
 

@@ -109,6 +109,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "0ddeacb3-dec2-4e3f-8ef8-8ce2233c6904",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "fe439589-9a59-42cd-9fe0-75fb3b7dfeb6",
                     "path": "2DVector",
@@ -165,11 +176,33 @@
                 },
                 {
                     "name": "",
+                    "id": "e1e0584f-98f0-458e-9ea5-16e735fce2c0",
+                    "path": "<XInputController>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controle",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "96e3652f-3b83-434b-b29f-088a0ac422c2",
                     "path": "<Keyboard>/space",
                     "interactions": "Hold",
                     "processors": "",
                     "groups": "Keyboard",
+                    "action": "Glide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9dbb9b90-4042-4f9f-b021-976d0367e6e8",
+                    "path": "<XInputController>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Glide",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -187,11 +220,33 @@
                 },
                 {
                     "name": "",
+                    "id": "99766219-c672-4e15-b751-27f8485e57e9",
+                    "path": "<XInputController>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FireAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "49d20279-c1ed-4233-aa85-4824f4689eff",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "026d8a06-42f9-4784-88a6-3e0bef7f5724",
+                    "path": "<XInputController>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -209,8 +264,30 @@
                 },
                 {
                     "name": "",
+                    "id": "77bcdbf7-740f-4d39-ba47-16988be78a98",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SlowTime",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "38e42672-0bec-4450-a87b-a4b15f1e60cf",
                     "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3bd8cb24-9bbf-4ce8-b40c-6c81b48a964c",
+                    "path": "<XInputController>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -231,6 +308,17 @@
                 },
                 {
                     "name": "",
+                    "id": "e2653c6a-d297-44e5-9bd9-0f02bcba9fa5",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FuryAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "fcde9e12-7c60-439b-9075-d96a6897f5e0",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -242,8 +330,30 @@
                 },
                 {
                     "name": "",
+                    "id": "268cac61-0cf8-43c7-b5f5-89b189d8db02",
+                    "path": "<XInputController>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "188a479c-9654-41ce-b903-d326ec10ccf4",
                     "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10d60c1d-7678-4b7c-8b96-ba8a96303c03",
+                    "path": "<XInputController>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

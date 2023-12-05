@@ -1,26 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlataformAndPlayer : MonoBehaviour
 {
-    public GameObject player;
+    public byte speed = 4;
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (other.gameObject == player)
-        {
-            player.transform.parent = transform;
-        }
+        transform.Rotate(Vector3.up * speed * Time.deltaTime);
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-
-        if (other.gameObject == player)
-        {
-            player.transform.parent = null;
-        }
-    }
-
 }

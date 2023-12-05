@@ -138,6 +138,8 @@ public class Character : MonoBehaviour
     private Status status;
     private Transform objVFX;
     public bool ISDEAD = false;
+    public bool InIdleMode = false;
+    public bool receivePowers = false;
     #endregion
 
     private void Awake()
@@ -194,8 +196,16 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Gravity();
+        if (transform.position.y <= -100)
+        {
+            status.CallDie();
+        }
 
+        Gravity();
+        if (InIdleMode)
+            return;
+
+        #region Metodos
         if (ISDEAD)
         {
             HandleDeath();
@@ -203,33 +213,34 @@ public class Character : MonoBehaviour
         }
 
         if (isDashing)
-                return;
+            return;
 
-            Movement();
-            if (isJumping)
-                HandleJump();
-    
-            if (comboState != ComboState.None)
+        Movement();
+        if (isJumping)
+            HandleJump();
+
+        if (comboState != ComboState.None)
+        {
+            comboTimer += Time.deltaTime;
+
+            if (comboTimer >= 2)
             {
-                comboTimer += Time.deltaTime;
-
-                if (comboTimer >= 2)
-                {
-                    comboState = ComboState.None;
-                }
+                comboState = ComboState.None;
             }
+        }
 
-            if (isUsingFuryAttack)
+        if (isUsingFuryAttack)
+        {
+            Vector3 oppositeDirection = objVFX.position - cameraTransform.position;
+            oppositeDirection.y = 0f;
+            if (oppositeDirection != Vector3.zero)
             {
-                Vector3 oppositeDirection = objVFX.position - cameraTransform.position;
-                oppositeDirection.y = 0f;
-                if (oppositeDirection != Vector3.zero)
-                {
-                    objVFX.rotation = Quaternion.LookRotation(-oppositeDirection);
-                }
+                objVFX.rotation = Quaternion.LookRotation(-oppositeDirection);
             }
-        
-        
+        }
+
+
+        #endregion
     }
 
     #region metodos
@@ -541,26 +552,29 @@ public class Character : MonoBehaviour
 
     private void ToggleSlowTime()
     {
-
-        Debug.Log("Slow Time atual: " + (Time.timeScale));
-        if (Time.timeScale == 1.0f && status.currentTimeSlow <= status.maxTime)
+        if (receivePowers)
         {
-            isTimeSlow = true;
-            Time.timeScale = slowTimeScale;
-            Time.fixedDeltaTime = 0.02f * Time.timeScale;
-            vignette.intensity.Override(0.4f);
-            StartCoroutine(IncrementarEnergia());
-            StopCoroutine(DecrementarEnergia());
 
-        }
-        else
-        {
-            isTimeSlow = false;
-            Time.timeScale = 1.0f;
-            Time.fixedDeltaTime = 0.02f;
-            vignette.intensity.Override(0f);
-            StopCoroutine(IncrementarEnergia());
-            StartCoroutine(DecrementarEnergia());
+            Debug.Log("Slow Time atual: " + (Time.timeScale));
+            if (Time.timeScale == 1.0f && status.currentTimeSlow <= status.maxTime)
+            {
+                isTimeSlow = true;
+                Time.timeScale = slowTimeScale;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                vignette.intensity.Override(0.4f);
+                StartCoroutine(IncrementarEnergia());
+                StopCoroutine(DecrementarEnergia());
+
+            }
+            else
+            {
+                isTimeSlow = false;
+                Time.timeScale = 1.0f;
+                Time.fixedDeltaTime = 0.02f;
+                vignette.intensity.Override(0f);
+                StopCoroutine(IncrementarEnergia());
+                StartCoroutine(DecrementarEnergia());
+            } 
         }
     }
 
@@ -686,7 +700,6 @@ public class Character : MonoBehaviour
     }
 
     #endregion
-
 
 }
 
