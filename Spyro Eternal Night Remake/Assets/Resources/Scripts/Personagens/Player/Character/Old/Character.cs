@@ -677,12 +677,12 @@ public class Character : MonoBehaviour
 
     private void HandleDeath()
     {
-        
+        anim.SetBool("desmaio", true);
         playerActionsAsset.Disable();
         anim.SetBool("idle", false);
         anim.SetBool("movement", false);
         anim.SetBool("fireBreath", false);
-        anim.SetTrigger("desmaio");
+       
     }
 
     #endregion
