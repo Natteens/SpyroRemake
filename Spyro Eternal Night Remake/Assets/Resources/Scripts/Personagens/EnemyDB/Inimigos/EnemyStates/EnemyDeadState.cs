@@ -13,28 +13,15 @@ public class EnemyDeadState : EnemyState
     {
     }
 
-    public override void Enter()
+    public override void LogicUpdate()
     {
-        base.Enter();
-
-        enemy.RB.mass = 10;
-        enemy.RB.isKinematic = true;
-
-        enemy.isDead = true;
-
-        ISDEAD();
+        base.LogicUpdate();
+        this.enemy.RB.mass = 10;
+        this.enemy.RB.isKinematic = true;
     }
 
+  
 
-    public void ISDEAD()
-    {
-        enemy.VFX.Play();
-    //    enemy.Destruido();
-        if (enemyData.PodeAndar)
-        {
-            enemy.Anim.SetBool("dead", true);
-            enemy.StartCoroutine(enemy.DissolveCo());
-        }
-    }
+
 }
 

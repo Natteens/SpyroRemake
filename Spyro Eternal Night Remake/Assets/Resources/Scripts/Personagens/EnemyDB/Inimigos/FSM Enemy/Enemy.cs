@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour, Damage
     public VisualEffect VFX;
 
     public SkinnedMeshRenderer skMesh;
-    private Material skMaterial;
+    public Material skMaterial;
 
     public float dissolveRate = 0.0125f;
     public float refreshRate = 0.025f;
@@ -82,24 +82,20 @@ public class Enemy : MonoBehaviour, Damage
 
     private void Update()
     {
-        CurrentVelocity = RB.velocity;
-        StateMachine.CurrentState.LogicUpdate();
 
-        if (transform.position.y <= -30)
-        {
-            Destruido();
-        }
-        
+       CurrentVelocity = RB.velocity;
+       StateMachine.CurrentState.LogicUpdate();
+    
+       if (transform.position.y <= -30)
+       {
+           Destruido();
+       }
     }
 
     private void FixedUpdate()
     {
         StateMachine.CurrentState.PhysicsUpdate();       
-        if (!isDead)
-        {
-            CheckPlayer();
-        }
-
+         CheckPlayer();
     }
 
     public void SetVelocity(Vector3 velocity)
@@ -158,13 +154,15 @@ public class Enemy : MonoBehaviour, Damage
 
     public void TakeDamage(float damage)
     {
-        damage = enemyData.Attack;
-        currentHealth -= damage;
-
-        if (currentHealth <= 0f)
+        if (!isDead)
         {
-            currentHealth = 0f;
-            StateMachine.ChangeState(DeadState);
+            damage = enemyData.Attack;
+            currentHealth -= damage;
+            if (currentHealth <= 0f)
+            {
+                currentHealth = 0f;
+                isDead = true; 
+            } 
         }
     }
 
@@ -176,13 +174,20 @@ public class Enemy : MonoBehaviour, Damage
     public IEnumerator DissolveCo()
     {
         float counter = 0;
+        VFX.Play();
 
-        while (skMaterial.GetFloat("_DissolveAmount") < 1)
+        while (skMaterial.GetFloat("_DissolveAmount") < 1f)
         {
             counter += dissolveRate;
             skMaterial.SetFloat("_DissolveAmount", counter);
         }
+
         yield return new WaitForSeconds(refreshRate);
+
+        if (skMaterial.GetFloat("_DissolveAmount") >= 1f)
+        {
+            Destruido();
+        }
     }
 
 

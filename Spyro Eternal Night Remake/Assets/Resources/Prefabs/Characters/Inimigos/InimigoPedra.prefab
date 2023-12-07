@@ -1727,8 +1727,8 @@ MonoBehaviour:
   isDead: 0
   VFX: {fileID: 3782443747841611184}
   skMesh: {fileID: 787330793167286546}
-  dissolveRate: 0.0125
-  refreshRate: 0.025
+  dissolveRate: 0.0005
+  refreshRate: 1
   maxHealth: 100
   currentHealth: 0
   podeATK: 0

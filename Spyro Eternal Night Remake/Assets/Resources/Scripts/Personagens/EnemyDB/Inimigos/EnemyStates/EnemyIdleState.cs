@@ -23,7 +23,12 @@ public class EnemyIdleState : EnemyState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (!isExitingState && enemy.Target != null)
+
+        if (enemy.currentHealth <= 0f)
+        {
+            stateMachine.ChangeState(enemy.DeadState);
+        }
+        else  if (!isExitingState && enemy.Target != null)
         {
             float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
             if (distanceToTarget > enemyData.attackRange)
@@ -48,8 +53,12 @@ public class EnemyIdleState : EnemyState
                     stateMachine.ChangeState(enemy.AttackState);
                 }
             }
+
+          
         }
     }
+
+
 
     private IEnumerator resetCD()
     {

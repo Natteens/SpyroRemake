@@ -131,13 +131,12 @@ public class Status : MonoBehaviour, Damage
     }
     private void Die()
     {
-        Debug.Log("Morreu!");
         p.ISDEAD = true;
         p.canAttack = false;
         p.canMove = false;
         p.isAttacking = true;
 
-        Invoke("RestartScene", 3.0f);
+        Invoke("RestartScene", 1f);
     }
 
 

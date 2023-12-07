@@ -10,16 +10,15 @@ public class EnemyChaseState : EnemyState
     {
     }
 
-    public override void Enter()
-    {
-        base.Enter();
-    }
-
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        if (!isExitingState)
+        if (enemy.currentHealth <= 0f)
+        {
+            stateMachine.ChangeState(enemy.DeadState);
+        }
+        else if (!isExitingState)
         {
             if (enemy.Target != null)
             {

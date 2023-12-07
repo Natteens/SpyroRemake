@@ -10,6 +10,7 @@ public class EnemyAttackState : EnemyState
 
     }
 
+
     public override void Enter()
     {
         base.Enter();
@@ -19,27 +20,30 @@ public class EnemyAttackState : EnemyState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        if (!isExitingState)
+        if (enemy.currentHealth <= 0f)
+        {
+            stateMachine.ChangeState(enemy.DeadState);
+        }
+        else if (!isExitingState)
         {
             if (enemy.Target != null)
-            {
-                float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
+             {
+                 float distanceToTarget = Vector3.Distance(enemy.transform.position, enemy.Target.position);
 
-                if (distanceToTarget <= enemyData.attackRange)
-                {
-                    stateMachine.ChangeState(enemy.AttackState);
-                    enemy.StartCoroutine(CD());
-                }
-                else if (distanceToTarget > enemyData.attackRange)
-                {
-                    stateMachine.ChangeState(enemy.ChaseState);
-                }
-            }
-            else
-            {
-                stateMachine.ChangeState(enemy.IdleState);
-            }
+                 if (distanceToTarget <= enemyData.attackRange)
+                 {
+                     stateMachine.ChangeState(enemy.AttackState);
+                     enemy.StartCoroutine(CD());
+                 }
+                 else if (distanceToTarget > enemyData.attackRange)
+                 {
+                     stateMachine.ChangeState(enemy.ChaseState);
+                 }
+             }
+             else
+             {
+                 stateMachine.ChangeState(enemy.IdleState);
+             }
         }
     }
 

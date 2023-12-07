@@ -14,7 +14,7 @@ public class PlataformaCircular : MonoBehaviour
         centro = transform.position;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         Orbitar();
     }
@@ -29,11 +29,13 @@ public class PlataformaCircular : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-       other.transform.parent = transform;
+        other.transform.SetParent(transform);
+        Debug.Log("cu");
     }
 
     private void OnTriggerExit(Collider other)
     {
-       other.transform.parent = null;
+        other.transform.SetParent(null);
+        Debug.Log("cuzao");
     }
 }

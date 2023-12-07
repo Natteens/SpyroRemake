@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 
 public class Character : MonoBehaviour
@@ -196,10 +197,11 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (transform.position.y <= -100)
-        {
-            status.CallDie();
+        if (transform.position.y <= -30)
+        {      
+            transform.position = new Vector3(transform.position.x, 50, transform.position.z);
         }
+
 
         Gravity();
         if (InIdleMode)
@@ -238,8 +240,6 @@ public class Character : MonoBehaviour
                 objVFX.rotation = Quaternion.LookRotation(-oppositeDirection);
             }
         }
-
-
         #endregion
     }
 
@@ -500,15 +500,11 @@ public class Character : MonoBehaviour
     public void OnAttackAnimationEnd()
     {
         isAttacking = false;
-        // Reinicie o combo aqui, se desejar permitir combos consecutivos.
-        // ResetCombo();
     }
 
     private IEnumerator AttackCooldown()
     {
         yield return new WaitUntil(() => !IsAttackAnimationPlaying());
-        // Reinicie o combo aqui, se desejar permitir combos consecutivos.
-        // ResetCombo();
     }
 
     private bool IsAttackAnimationPlaying()
@@ -554,8 +550,6 @@ public class Character : MonoBehaviour
     {
         if (receivePowers)
         {
-
-            Debug.Log("Slow Time atual: " + (Time.timeScale));
             if (Time.timeScale == 1.0f && status.currentTimeSlow <= status.maxTime)
             {
                 isTimeSlow = true;
@@ -696,8 +690,11 @@ public class Character : MonoBehaviour
         anim.SetBool("idle", false);
         anim.SetBool("movement", false);
         anim.SetBool("fireBreath", false);
-       
+
+        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
 
     #endregion
 
