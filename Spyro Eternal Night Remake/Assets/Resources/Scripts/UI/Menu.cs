@@ -3,16 +3,15 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
-    
+    public string FaseUm;
+
     public void StartGame()
     {
-
-        SceneManager.LoadScene("");
+        SceneManager.LoadScene(FaseUm);
     }
 
     public void QuitGame()
     {
-        Debug.Log("saiu");
         Application.Quit();
     }
 }
