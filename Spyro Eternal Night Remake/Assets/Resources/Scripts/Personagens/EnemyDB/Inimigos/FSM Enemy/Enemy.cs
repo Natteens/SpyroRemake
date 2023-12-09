@@ -171,25 +171,10 @@ public class Enemy : MonoBehaviour, Damage
         Destroy(gameObject);
     }
 
-    public IEnumerator DissolveCo()
+    public void EndLife()
     {
-        float counter = 0;
-        VFX.Play();
-
-        while (skMaterial.GetFloat("_DissolveAmount") < 1f)
-        {
-            counter += dissolveRate;
-            skMaterial.SetFloat("_DissolveAmount", counter);
-        }
-
-        yield return new WaitForSeconds(refreshRate);
-
-        if (skMaterial.GetFloat("_DissolveAmount") >= 1f)
-        {
-            Destruido();
-        }
+        Invoke("Destruido", 1f);
     }
-
 
     private void OnTriggerEnter(Collider other)
     {

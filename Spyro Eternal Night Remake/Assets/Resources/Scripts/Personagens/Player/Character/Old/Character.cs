@@ -124,6 +124,8 @@ public class Character : MonoBehaviour
 
     #region Privates
 
+    public CharacterController character;
+    [SerializeField] private Animator anim;
     private float verticalVelocity = 0f;
     private bool isJumping = false;
     private bool isRunning = false;
@@ -132,8 +134,6 @@ public class Character : MonoBehaviour
     public bool isUsingFireBreath { get; private set; } = false;
     public bool isTimeSlow = false;
     private byte remainingJumps;
-    private CharacterController character;
-    [SerializeField]private Animator anim;
     private Vector3 direction;
     private Vector3 dashDirection;
     private Status status;
@@ -146,7 +146,6 @@ public class Character : MonoBehaviour
     private void Awake()
     {
         ISDEAD = false;
-        character = GetComponent<CharacterController>();
         status = GetComponent<Status>();
         playerActionsAsset = new PlayerInputActions();
         remainingJumps = maxJumps;
@@ -228,6 +227,7 @@ public class Character : MonoBehaviour
             if (comboTimer >= 2)
             {
                 comboState = ComboState.None;
+                isAttacking = false;
             }
         }
 
@@ -497,7 +497,7 @@ public class Character : MonoBehaviour
         isAttacking = false;
     }
 
-    public void OnAttackAnimationEnd()
+    public void OnAttackEnd()
     {
         isAttacking = false;
     }

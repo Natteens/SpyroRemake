@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     private bool isPaused = false;
 
-    private Character character;
+    public Character character;
 
     void Update()
     {
@@ -56,17 +56,4 @@ public class GameManager : MonoBehaviour
     {
          SceneManager.LoadScene(Menu);
     }
-
-    private void OnApplicationFocus(bool focus)
-    {
-        if (focus)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
-    }
-
 }
