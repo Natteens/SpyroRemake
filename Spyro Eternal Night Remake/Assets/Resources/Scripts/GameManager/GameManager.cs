@@ -70,18 +70,18 @@ public class GameManager : MonoBehaviour
          SceneManager.LoadScene(Menu);
     }
 
-    //private void OnApplicationFocus()
-    //{ 
+    private void OnApplicationFocus()
+    {
 
-    //    if (isPaused)
-    //    {
-    //        Cursor.lockState = CursorLockMode.None;
-    //    }
-    //    else
-    //    {            
-    //       Cursor.lockState = CursorLockMode.Locked;   
-    //    }
+        if (isPaused)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
 
-    //}
+    }
 
 }
