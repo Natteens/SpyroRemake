@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour, Damage
 {
@@ -42,7 +43,7 @@ public class Enemy : MonoBehaviour, Damage
 
     public float dissolveRate = 0.0125f;
     public float refreshRate = 0.025f;
-
+    public Slider s;
     #region Vida
     //VIDA
     public float maxHealth;
@@ -175,6 +176,7 @@ public class Enemy : MonoBehaviour, Damage
     {
         Invoke("Destruido", 1f);
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
