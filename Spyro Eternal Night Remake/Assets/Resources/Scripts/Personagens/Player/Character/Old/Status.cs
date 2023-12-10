@@ -25,7 +25,7 @@ public class Status : MonoBehaviour, Damage
 
     public Slider energySlider;
     public Slider healthSlider;
-    public Slider furySlider;
+    public Image furySlider;
     public Slider timeSlider;
     public Character p;
     
@@ -43,7 +43,7 @@ public class Status : MonoBehaviour, Damage
     {
         UpdateSlider(currentMana, maxMana, energySlider);
         UpdateSlider(currentHealth, maxHealth, healthSlider);
-        UpdateSlider(currentFuryEnergy, maxFuryEnergy, furySlider);
+        UpdateImage(currentFuryEnergy, maxFuryEnergy, furySlider);
         UpdateSlider(currentTimeSlow, maxTime, timeSlider);
     }
 
@@ -148,6 +148,18 @@ public class Status : MonoBehaviour, Damage
             slider.value = clampedValue / maxValue;
             int roundedValue = Mathf.RoundToInt(currentValue);
             slider.value = roundedValue / maxValue;
+        }
+    }
+
+
+    private void UpdateImage(float currentValue, float maxValue, Image slider)
+    {
+        if (slider != null)
+        {
+            float clampedValue = Mathf.Clamp(currentValue, 0f, maxValue);
+            slider.fillAmount = clampedValue / maxValue;
+            int roundedValue = Mathf.RoundToInt(currentValue);
+            slider.fillAmount = roundedValue / maxValue;
         }
     }
 
