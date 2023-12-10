@@ -13,19 +13,32 @@ public class GameManager : MonoBehaviour
 
     public GameObject pauseMenuUI;
     public GameObject HudHP;
+    public GameObject THX;
 
     private bool isPaused = false;
+    public bool isThx = false;
 
     public Character character;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !isThx)
         {
             if (isPaused)
                 Resume();
             else
                 Pause();
+        }
+
+        if (isThx)
+        {
+            THX.SetActive(true);
+            character.InIdleMode = true;
+        }
+        else
+        {
+            THX.SetActive(false);
+            character.InIdleMode = false;
         }
     }
 
@@ -56,4 +69,19 @@ public class GameManager : MonoBehaviour
     {
          SceneManager.LoadScene(Menu);
     }
+
+    //private void OnApplicationFocus()
+    //{ 
+
+    //    if (isPaused)
+    //    {
+    //        Cursor.lockState = CursorLockMode.None;
+    //    }
+    //    else
+    //    {            
+    //       Cursor.lockState = CursorLockMode.Locked;   
+    //    }
+
+    //}
+
 }

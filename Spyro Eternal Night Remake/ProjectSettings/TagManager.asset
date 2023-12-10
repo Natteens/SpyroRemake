@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Enemy
   - FogoDamage
+  - FallMap
   layers:
   - Default
   - TransparentFX

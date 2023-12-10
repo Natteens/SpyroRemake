@@ -1,10 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 using UnityEngine.InputSystem;
 
 public class ReceivePowers : MonoBehaviour
 {
     public GameObject Main;
+
+    public VisualEffect vfx;
 
     public Transform centralPoint; 
     public GameObject[] objectsToActivate; 
@@ -39,6 +42,7 @@ public class ReceivePowers : MonoBehaviour
     private void CentralizePlayer()
     {
         playerObject.transform.position = centralPoint.position;
+        vfx.Play();
     }
 
     private IEnumerator SubindoPlataformas()

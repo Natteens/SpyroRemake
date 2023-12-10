@@ -196,12 +196,6 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (transform.position.y <= -30)
-        {      
-            transform.position = new Vector3(transform.position.x, 50, transform.position.z);
-        }
-
-
         Gravity();
         if (InIdleMode)
             return;
@@ -291,6 +285,8 @@ public class Character : MonoBehaviour
         if (isDashing)
             return;
 
+        
+
         Vector2 moveInput = move.ReadValue<Vector2>();
         direction = new Vector3(moveInput.x, 0, moveInput.y).normalized;
 
@@ -306,12 +302,14 @@ public class Character : MonoBehaviour
 
         dashDirection.y = 0f;
         dashDirection.Normalize();
+        
 
         if (status.currentMana >= dashManaCost)
         {
             if (Time.time - lastDashTime >= dashCooldownTime)
             {
                 status.UseMana(dashManaCost);
+                anim.SetBool("dash", true);
                 float targetAngle = Mathf.Atan2(dashDirection.x, dashDirection.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
 
@@ -324,6 +322,7 @@ public class Character : MonoBehaviour
 
     private IEnumerator DashCooldown()
     {
+        anim.SetBool("dash", false);
         float startTime = Time.time;
 
         while (Time.time < startTime + dashDuration)
@@ -548,26 +547,33 @@ public class Character : MonoBehaviour
 
     private void ToggleSlowTime()
     {
-        if (receivePowers)
+        if (!InIdleMode)
         {
-            if (Time.timeScale == 1.0f && status.currentTimeSlow <= status.maxTime)
+            if (receivePowers)
             {
-                isTimeSlow = true;
-                Time.timeScale = slowTimeScale;
-                Time.fixedDeltaTime = 0.02f * Time.timeScale;
-                vignette.intensity.Override(0.4f);
-                StartCoroutine(IncrementarEnergia());
-                StopCoroutine(DecrementarEnergia());
+                if (Time.timeScale == 1.0f && status.currentTimeSlow <= status.maxTime)
+                {
+                    speed = 20;
+                    RunSpeed = 30;
+                    isTimeSlow = true;
+                    Time.timeScale = slowTimeScale;
+                    Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                    vignette.intensity.Override(0.4f);
+                    StartCoroutine(IncrementarEnergia());
+                    StopCoroutine(DecrementarEnergia());
 
-            }
-            else
-            {
-                isTimeSlow = false;
-                Time.timeScale = 1.0f;
-                Time.fixedDeltaTime = 0.02f;
-                vignette.intensity.Override(0f);
-                StopCoroutine(IncrementarEnergia());
-                StartCoroutine(DecrementarEnergia());
+                }
+                else
+                {
+                    speed = 5;
+                    RunSpeed = 10;
+                    isTimeSlow = false;
+                    Time.timeScale = 1.0f;
+                    Time.fixedDeltaTime = 0.02f;
+                    vignette.intensity.Override(0f);
+                    StopCoroutine(IncrementarEnergia());
+                    StartCoroutine(DecrementarEnergia());
+                }
             } 
         }
     }

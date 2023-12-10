@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abc7fcabad4482459fc0f93c4fe91e4, type: 3}
   m_Name: Inimigo de Pedra
   m_EditorClassIdentifier: 
-  vidaMax: 10
+  vidaMax: 20
   speed: 5
   Attack: 10
   rotationSpeed: 5
   viewAngle: 360
   rayHeight: 0.5
   viewDistance: 15
-  rayCount: 120
+  rayCount: 50
   attackRange: 3
   rayCheck: 5
   groundLayer:

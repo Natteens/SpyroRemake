@@ -3,7 +3,7 @@ using UnityEngine.VFX;
 
 public class PedestalFogo : MonoBehaviour
 {
-    public VisualEffect fogoVFX;
+    public VisualEffect[] fogoVFX;
     public ParticleSystem fogoParticles;
     public bool ativo = false; 
 
@@ -17,7 +17,8 @@ public class PedestalFogo : MonoBehaviour
     }
     private void AtivarEfeitosDeFogo()
     {
-       fogoVFX.Play();
+       fogoVFX[0].Play();
+       fogoVFX[1].Play();
        fogoParticles.Play();
         ativo = true;
     }
