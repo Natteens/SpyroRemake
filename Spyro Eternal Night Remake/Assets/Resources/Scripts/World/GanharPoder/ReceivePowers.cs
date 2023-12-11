@@ -67,7 +67,7 @@ public class ReceivePowers : MonoBehaviour
         charController.enabled = true;
         playerCharacter.InIdleMode = false;
 
-        StatusBuff.currentMana = 100;
+        StatusBuff.currentMana = StatusBuff.maxMana;
         playerCharacter.receivePowers = true;
         Destroy(Main);
     }

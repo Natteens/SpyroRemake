@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class Status : MonoBehaviour, Damage
 {
     [HideInInspector]
-    public float maxHealth = 100f;
+    public float maxHealth = 200f;
     [HideInInspector]
-    public float maxMana = 100f;
+    public float maxMana = 1000f;
     [HideInInspector]
-    public float maxFuryEnergy = 100f;
+    public float maxFuryEnergy = 1000f;
     [HideInInspector]
-    public float maxTime = 100f;
+    public float maxTime = 10000f;
 
     // [HideInInspector]
     public float currentHealth;
@@ -33,9 +33,9 @@ public class Status : MonoBehaviour, Damage
     private void Start()
     {
         currentHealth = maxHealth;
-       // currentMana = maxMana;
-        currentMana = 0f;
-        currentFuryEnergy = 0f;
+        currentMana = maxMana;
+      //  currentMana = 0f;
+        currentFuryEnergy = maxFuryEnergy;
         currentTimeSlow = 0f;
     }
 

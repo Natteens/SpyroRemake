@@ -1043,6 +1043,7 @@ GameObject:
   - component: {fileID: 8349726591888388029}
   - component: {fileID: 8349726591888388028}
   - component: {fileID: 8349726591888388027}
+  - component: {fileID: 1197697236}
   m_Layer: 6
   m_Name: Spyro
   m_TagString: Player
@@ -1201,8 +1202,8 @@ MonoBehaviour:
   RunSpeed: 10
   turnSmoothTime: 0.1
   canMove: 1
-  maxJumps: 2
-  jumpHeight: 15
+  maxJumps: 100
+  jumpHeight: 20
   jumpStartTime: 0
   jumpDuration: 0.5
   dashForce: 15
@@ -1244,7 +1245,7 @@ MonoBehaviour:
   isTimeSlow: 0
   ISDEAD: 0
   InIdleMode: 0
-  receivePowers: 0
+  receivePowers: 1
 --- !u!114 &8349726591888388027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1270,6 +1271,26 @@ MonoBehaviour:
   furySlider: {fileID: 0}
   timeSlider: {fileID: 0}
   p: {fileID: 8349726591888388028}
+--- !u!114 &1197697236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335984664487554938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6448de254f7800640b34db4f2b349a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 2666162642915046848}
+  freeLookCamera: {fileID: 0}
+  fallLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  restartDelay: 2
+  fallTimeThreshold: 3
+  fallHeightThreshold: -30
 --- !u!1 &3547157844267365466
 GameObject:
   m_ObjectHideFlags: 0
@@ -2917,8 +2938,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.3942752, y: 1.4985995, z: 1.0781579}
-  m_Center: {x: -0.1654803, y: 0.17611358, z: 1.246582}
+  m_Size: {x: 2.7722967, y: 3.3695796, z: 2.464205}
+  m_Center: {x: -0.3567613, y: -0.7510013, z: 1.7166266}
 --- !u!1 &8098792383743922758
 GameObject:
   m_ObjectHideFlags: 0
@@ -3073,8 +3094,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.0210807, y: 0.88775194, z: 1.2272835}
-  m_Center: {x: -0.10983268, y: -0.09122274, z: 1.3163128}
+  m_Size: {x: 3.0210807, y: 2.4475038, z: 2.3184292}
+  m_Center: {x: -0.10983385, y: -0.03820836, z: 1.8618878}
 --- !u!1 &8098792383958787916
 GameObject:
   m_ObjectHideFlags: 0
@@ -3163,10 +3184,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.85
+  m_Radius: 1.3061366
   m_Height: 6
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 2.5}
+  m_Center: {x: 0.030864477, y: 0.1382209, z: 2.5}
 --- !u!1 &8098792384456883965
 GameObject:
   m_ObjectHideFlags: 0
@@ -3210,8 +3231,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.3942754, y: 1.619881, z: 1.066533}
-  m_Center: {x: -0.16718063, y: -0.51458263, z: 1.2316253}
+  m_Size: {x: 3.2801185, y: 3.2275457, z: 2.4374619}
+  m_Center: {x: -0.60809344, y: 0.29696807, z: 1.7723876}
 --- !u!1 &8098792384467533612
 GameObject:
   m_ObjectHideFlags: 0
@@ -3366,8 +3387,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 8.37442, y: 3.7280166, z: 6.1941376}
-  m_Center: {x: -0.63139343, y: 0.041996837, z: -0.783638}
+  m_Size: {x: 9.13307, y: 8.631106, z: 7.905777}
+  m_Center: {x: -0.25206852, y: -2.4095483, z: -0.39328384}
 --- !u!1 &8098792385545557675
 GameObject:
   m_ObjectHideFlags: 0
